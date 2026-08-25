@@ -43,8 +43,10 @@ CHARA wordmark. Without it, Qt uses the normal monospace fallback.
 
 ## Artwork and live wallpaper
 
-No Undertale, Glitchtale, DeviantArt, Pinterest, Pixiv, Steam Workshop, or
-Wallpaper Engine artwork is redistributed by this repository. Optional sources:
+No original Undertale, Glitchtale, DeviantArt, Pinterest, Pixiv, Steam Workshop,
+or Wallpaper Engine artwork file is redistributed by this repository. The
+README gallery includes screenshots of the user's running desktop, in which the
+following live wallpaper is visible. Optional sources and inspirations:
 
 - *Chara's eyes*, uploader f1re:
   https://steamcommunity.com/sharedfiles/filedetails/?id=3450338231

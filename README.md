@@ -7,7 +7,26 @@ states, notifications, and OSD feedback.
 
 This is the public, portable edition of a real daily-driver configuration. It
 contains no passwords, tokens, personal location, device address, package
-fingerprint, Steam asset, or third-party fan artwork.
+fingerprint, Steam asset, or original third-party artwork file. The gallery
+contains screenshots of the running desktop, credited below.
+
+## Gallery
+
+### Rise V1 desktop
+
+![Chara Determination desktop with Rise V1](screenshots/desktop.png)
+
+### Soul notifications
+
+![Soul-colored notification categories](screenshots/notifications.png)
+
+### Volume OSD
+
+![Chara volume OSD](screenshots/osd-volume.png)
+
+The live scene visible in these screenshots is *Chara's eyes* by Steam
+Workshop uploader **f1re** ([Workshop item 3450338231](https://steamcommunity.com/sharedfiles/filedetails/?id=3450338231)).
+The Wallpaper Engine asset itself is not included in this repository.
 
 ## What is included
 
@@ -126,7 +145,9 @@ The same checks run on every GitHub push and pull request.
 
 Original repository work is MIT licensed. Rise, Omarchy-derived components,
 Mirador, Quick Look, optional fonts, and artwork references are documented in
-`THIRD_PARTY_NOTICES.md`. Undertale and Glitchtale imagery is not redistributed.
+`THIRD_PARTY_NOTICES.md`. The gallery reproduces only screenshots of the
+configured desktop; original Wallpaper Engine and fan-art files are not
+redistributed.
 
 This is an unofficial fan project and is not affiliated with Toby Fox, Camila
 Cuevas, Basecamp, or HANCORE Linux.

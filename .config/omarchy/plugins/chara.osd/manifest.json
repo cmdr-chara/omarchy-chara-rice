@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "chara.osd",
+  "name": "Chara Soul OSD",
+  "version": "1.0.0",
+  "description": "Undertale battle-box OSD with semantic soul colors.",
+  "kinds": [
+    "panel"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "panel": "Osd.qml"
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.osd"
+  }
+}

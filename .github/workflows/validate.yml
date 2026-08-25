@@ -1,0 +1,20 @@
+name: Validate public rice
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install validation tools
+        run: sudo apt-get update && sudo apt-get install -y jq ripgrep
+      - name: Validate repository
+        run: ./scripts/validate.sh
+      - name: Test reversible installation
+        run: ./tests/test-install-uninstall.sh

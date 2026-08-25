@@ -1,0 +1,13 @@
+background                = "#211416"
+background-alpha          = 0.96
+text                      = "#D9D3DC"
+border                    = "#514047"
+border-alpha              = 0.96
+border-width              = 1
+corner-radius             = 14
+selected-background       = "#352128"
+selected-background-alpha = 0.96
+selected-text             = "#F4EFF4"
+selected-border           = "#A45D68"
+selected-border-alpha     = 0.95
+selected-border-width     = 1

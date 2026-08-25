@@ -1,0 +1,39 @@
+mode = "dark"
+
+# Chara / Glitchtale: oxblood shadows, cold highlights, muted determination.
+# Garnet is the persistent accent. Brighter soul colors are reserved for
+# transient state and terminal ANSI roles.
+accent = "#A45D68"
+selection = "#4A2B34"
+muted = "#514047"
+
+background = "#211416"
+dark_background = "#170D10"
+darker_background = "#0E080A"
+lighter_background = "#352128"
+
+foreground = "#D9D3DC"
+dark_foreground = "#847782"
+light_foreground = "#C2BAC5"
+bright_foreground = "#F4EFF4"
+
+hyprland_active_border = "rgba(A45D68ee) rgba(75424Dee) 45deg"
+hyprland_inactive_border = "rgba(514047aa)"
+active_border_color = "#A45D68"
+active_tab_background = "#4A2B34"
+
+red = "#D76872"
+yellow = "#D6B06C"
+orange = "#D69069"
+green = "#8EAE8C"
+cyan = "#7FAFC0"
+blue = "#7F8FCA"
+magenta = "#A45D68"
+brown = "#80635C"
+
+bright_red = "#E88A92"
+bright_yellow = "#F0C989"
+bright_green = "#B5C9B1"
+bright_cyan = "#B7D3DC"
+bright_blue = "#ADB8E2"
+bright_magenta = "#C79AAF"

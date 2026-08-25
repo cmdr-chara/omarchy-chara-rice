@@ -1,0 +1,24 @@
+.DS_Store
+*~
+*.bak
+*.bak.*
+*.log
+*.old
+*.old.*
+*.swp
+*.tmp
+.env
+.env.*
+**/.agents/
+**/.cache/
+**/.codex/
+**/.git/
+**/__pycache__/
+*.pyc
+credentials*
+secrets*
+
+# Local-only copyrighted artwork and user configuration
+.config/omarchy/themes/chara-determination/backgrounds/
+.config/omarchy/themes/chara-determination/preview.png
+.local/share/fonts/

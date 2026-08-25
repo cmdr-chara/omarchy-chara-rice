@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Start with Omarchy's stable fields, then append useful hardware details for
+# the custom Power panel. Missing sensors are simply omitted.
+omarchy-battery-status --shell
+
+battery=$(upower -e 2>/dev/null | awk '/BAT/ { print; exit }')
+[[ -n $battery ]] || exit 0
+info=$(upower -i "$battery" 2>/dev/null)
+
+field() {
+  awk -v key="$1" '$1 == key ":" { print $2; exit }' <<<"$info"
+}
+
+energy=$(field energy)
+energy_full=$(field energy-full)
+health=$(field capacity)
+voltage=$(field voltage)
+technology=$(field technology)
+
+if [[ -n $energy && -n $energy_full ]]; then
+  printf 'energy\t%s / %s Wh\n' "$energy" "$energy_full"
+fi
+[[ -n $health ]] && printf 'health\t%s\n' "$health"
+[[ -n $voltage ]] && printf 'voltage\t%s V\n' "$voltage"
+[[ -n $technology ]] && printf 'technology\t%s\n' "$technology"
+
+native_path=$(awk '$1 == "native-path:" { print $2; exit }' <<<"$info")
+temperature_path="/sys/class/power_supply/$native_path/temp"
+if [[ -r $temperature_path ]]; then
+  awk '{ printf "temperature\t%.1f °C\n", $1 / 10 }' "$temperature_path"
+fi

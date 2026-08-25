@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "chara.bar",
+  "name": "Chara Battle HUD",
+  "version": "1.0.0",
+  "author": "Chara",
+  "description": "Three-panel Undertale battle HUD for Omarchy Quattro.",
+  "kinds": [
+    "bar"
+  ],
+  "entryPoints": {
+    "bar": "Bar.qml"
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.bar"
+  }
+}

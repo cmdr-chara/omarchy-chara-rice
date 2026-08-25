@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf 'linux-wallpaperengine %s\n' "$*" >> "${TEST_COMMAND_LOG:?}"

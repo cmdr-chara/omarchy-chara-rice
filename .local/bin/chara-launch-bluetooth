@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -u
+
+app_id="org.omarchy.bluetui"
+
+# Reuse the existing manager instead of spawning duplicate terminal windows.
+if command -v hyprctl >/dev/null 2>&1 && command -v jq >/dev/null 2>&1; then
+  address="$(hyprctl clients -j 2>/dev/null | jq -r --arg id "$app_id" '.[] | select(.class == $id) | .address' | head -n 1)"
+  if [[ -n "$address" ]]; then
+    hyprctl dispatch "hl.dsp.focus({ window = \"address:$address\" })" >/dev/null 2>&1 && exit 0
+  fi
+fi
+
+command -v rfkill >/dev/null 2>&1 && rfkill unblock bluetooth >/dev/null 2>&1 || true
+
+if command -v bluetui >/dev/null 2>&1; then
+  if command -v foot >/dev/null 2>&1; then
+    exec foot --app-id="$app_id" --title="Bluetooth" -e bluetui
+  elif command -v xdg-terminal-exec >/dev/null 2>&1; then
+    exec xdg-terminal-exec --app-id="$app_id" --title="Bluetooth" -e bluetui
+  fi
+fi
+
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send -a QS-Shell -u critical "Bluetooth settings unavailable" \
+    "bluetui or a supported terminal could not be started"
+fi
+
+exit 1

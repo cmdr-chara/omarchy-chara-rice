@@ -1,0 +1,58 @@
+# Third-party notices
+
+The repository-level MIT license covers the original configuration, scripts,
+and modifications in this repository. The following components retain their
+own attribution and license terms.
+
+## Quickshell Rise
+
+- Project: https://github.com/HANCORE-linux/quickshell-dots
+- Integrated revision: `d0896fc532a216b281951157563ff34092b91a0a`
+- License: MIT, copyright 2026 HANCORE-linux
+- License copy: `LICENSES/HANCORE-RISE-MIT.txt`
+
+## Omarchy Shell-derived plugins
+
+The `chara.*` plugins are user-owned clones or adaptations of Omarchy Shell
+plugins. Omarchy is licensed under MIT:
+https://github.com/basecamp/omarchy
+
+## Quick Look
+
+- Project: https://github.com/andreconde21/omarchy-quick-look
+- Integrated version: 0.2.0
+- Integrated revision: `0222974e045fef752cabb32d7b5fadc8b2310eb7`
+- License: MIT; the license is retained in the plugin directory.
+
+## Mirador
+
+- Project: https://github.com/sanjyay/Mirador
+- Integrated version: 2.0.0
+- Integrated revision: `88fa54be938cb8bf833f33fdaf8fe7b6d92ae72c`
+- License: MIT; the license is retained in the plugin directory.
+
+## Determination font
+
+Determination Mono by Haley Wakamatsu (JapanYoshi) is not redistributed here.
+The original project identifies it as CC BY-NC-ND 4.0:
+https://www.behance.net/gallery/31268855/Determination-Better-Undertale-Font
+
+Install the unchanged font locally at
+`~/.local/share/fonts/Determination/DeterminationMonoWeb.ttf` to enable the
+CHARA wordmark. Without it, Qt uses the normal monospace fallback.
+
+## Artwork and live wallpaper
+
+No Undertale, Glitchtale, DeviantArt, Pinterest, Pixiv, Steam Workshop, or
+Wallpaper Engine artwork is redistributed by this repository. Optional sources:
+
+- *Chara's eyes*, uploader f1re:
+  https://steamcommunity.com/sharedfiles/filedetails/?id=3450338231
+- *Glitchtale Episode 8 - Animosity Chara*, Emuleel-Arts:
+  https://www.deviantart.com/emuleel-arts/art/Glitchtale-Episode-8-Animosity-Chara-946343882
+- *Hate Chara (Screenshot Redraw)*, CamilaAnims:
+  https://www.deviantart.com/camilaanims/art/Hate-Chara-Screenshot-Redraw-840936203
+
+Undertale is owned by Toby Fox. Glitchtale is owned by Camila Cuevas. This is
+an unofficial fan-made desktop configuration and is not affiliated with or
+endorsed by either creator.

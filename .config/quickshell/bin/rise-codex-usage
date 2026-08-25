@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+# Compatibility bridge for Omarchy 4.0 + newer Codex CLI releases.
+# Omarchy's packaged collector still passes `-a untrusted`; Codex 0.149+
+# renamed the non-interactive choice to `never`. Run a patched in-memory copy
+# and cache the non-sensitive usage JSON so hovering the bar never spawns the
+# CLI repeatedly.
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/qsrise"
+cache_file="$cache_dir/codex-usage.json"
+lock_file="$cache_dir/codex-usage.lock"
+collector="/usr/share/omarchy/bin/omarchy-agent-usage-codex"
+ttl=300
+
+mkdir -p "$cache_dir"
+
+fresh_cache() {
+  [[ -s "$cache_file" ]] || return 1
+  local now mtime
+  now=$(date +%s)
+  mtime=$(stat -c %Y "$cache_file" 2>/dev/null || printf '0')
+  (( now >= mtime && now - mtime < ttl )) || return 1
+  jq -e '.ready == true and (.id == "codex")' "$cache_file" >/dev/null 2>&1
+}
+
+if fresh_cache; then
+  cat "$cache_file"
+  exit 0
+fi
+
+exec 9>"$lock_file"
+if ! flock -w 12 9; then
+  [[ -s "$cache_file" ]] && cat "$cache_file"
+  exit 1
+fi
+
+if fresh_cache; then
+  cat "$cache_file"
+  exit 0
+fi
+
+payload=$(sed 's/"untrusted"/"never"/' "$collector" | python3 - --limits-only 2>/dev/null) || payload=""
+if jq -e '.ready == true and (.id == "codex")' >/dev/null 2>&1 <<<"$payload"; then
+  tmp=$(mktemp "$cache_dir/.codex-usage.XXXXXX")
+  printf '%s\n' "$payload" >"$tmp"
+  chmod 0644 "$tmp"
+  mv "$tmp" "$cache_file"
+fi
+
+[[ -s "$cache_file" ]] && cat "$cache_file"

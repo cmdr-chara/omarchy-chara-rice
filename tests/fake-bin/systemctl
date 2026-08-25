@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+printf 'systemctl %s\n' "$*" >> "${TEST_COMMAND_LOG:?}"
+case "$*" in
+  '--user is-enabled chara-live-wallpaper.service'|\
+  '--user is-active chara-live-wallpaper.service') exit 1 ;;
+esac

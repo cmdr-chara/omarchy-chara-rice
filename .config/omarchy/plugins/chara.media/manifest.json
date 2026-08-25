@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "chara.media",
+  "name": "Chara Now Playing",
+  "version": "1.0.0",
+  "author": "Chara",
+  "description": "Determination-styled MPRIS media controls for Omarchy Quattro.",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Chara Now Playing",
+    "description": "Determination-styled now-playing controls",
+    "category": "Media",
+    "allowMultiple": false
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.media"
+  }
+}

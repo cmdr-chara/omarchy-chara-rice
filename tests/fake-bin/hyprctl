@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "$*" in
+  configerrors) exit 0 ;;
+  '-j monitors') printf '[{"name":"TEST-1","focused":true}]\n' ;;
+  *) printf 'hyprctl %s\n' "$*" >> "${TEST_COMMAND_LOG:?}" ;;
+esac

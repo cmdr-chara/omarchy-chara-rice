@@ -1,0 +1,21 @@
+[Unit]
+Description=Chara live wallpaper (self-healing)
+After=graphical-session.target pipewire-pulse.service wireplumber.service
+Wants=pipewire-pulse.service wireplumber.service
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=/usr/bin/linux-wallpaperengine
+ConditionPathExists=%h/.local/share/Steam/steamapps/common/wallpaper_engine/assets
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+EnvironmentFile=-%h/.config/chara-rice/live-wallpaper.env
+ExecStart=%h/.local/bin/chara-live-wallpaper
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=5
+
+[Install]
+WantedBy=graphical-session.target

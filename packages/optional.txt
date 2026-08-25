@@ -1,0 +1,10 @@
+# Quick Look: PDF, video, archive, and Nautilus integrations.
+ffmpeg
+ffmpegthumbnailer
+libarchive
+nautilus-python
+poppler
+
+# Optional live wallpaper. linux-wallpaperengine is normally installed from AUR
+# and intentionally is not installed automatically by this repository.
+linux-wallpaperengine

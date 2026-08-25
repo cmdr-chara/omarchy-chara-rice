@@ -1,0 +1,11 @@
+# Additional packages used directly by this rice on Omarchy 4.
+bluetui
+curl
+file
+foot
+imagemagick
+jq
+python-gobject
+qt6-imageformats
+rsync
+upower

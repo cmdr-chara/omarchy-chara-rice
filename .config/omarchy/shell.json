@@ -1,0 +1,92 @@
+{
+  "bar": {
+    "centerAnchor": "omarchy.clock",
+    "layout": {
+      "center": [
+        {
+          "format": "dddd HH:mm",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "id": "omarchy.clock",
+          "verticalFormat": "HH\n—\nmm"
+        }
+      ],
+      "left": [
+        {
+          "id": "omarchy.menu"
+        },
+        {
+          "id": "chara.workspaces"
+        },
+        {
+          "id": "chara.media"
+        }
+      ],
+      "right": [
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "id": "omarchy.tray"
+        },
+        {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "chara.network"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
+          "id": "omarchy.monitor"
+        },
+        {
+          "id": "chara.power",
+          "showPercentage": true
+        }
+      ]
+    },
+    "position": "top",
+    "transparent": false,
+    "id": "chara.bar"
+  },
+  "idle": {
+    "lock": 600,
+    "screensaver": false
+  },
+  "plugins": [
+    {
+      "id": "chara.idle"
+    },
+    {
+      "id": "chara.lock"
+    },
+    {
+      "id": "chara.notifications"
+    },
+    {
+      "id": "chara.osd"
+    },
+    {
+      "id": "mirador"
+    },
+    {
+      "id": "andreconde.quick-look"
+    }
+  ],
+  "version": 1,
+  "disabledPlugins": [
+    "omarchy.idle",
+    "omarchy.lock",
+    "omarchy.media",
+    "omarchy.notifications",
+    "omarchy.osd"
+  ],
+  "cloneSourceRestores": [
+    "chara.idle",
+    "chara.lock",
+    "chara.media",
+    "chara.notifications",
+    "chara.osd"
+  ]
+}

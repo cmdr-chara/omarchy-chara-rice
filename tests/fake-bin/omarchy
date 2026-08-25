@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "${1:-}" in
+  version) printf 'Omarchy 4.0.0-1\n' ;;
+  *) printf 'omarchy %s\n' "$*" >> "${TEST_COMMAND_LOG:?}" ;;
+esac

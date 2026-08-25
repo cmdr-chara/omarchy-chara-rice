@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -u
+
+screensaver_in_focus() {
+  hyprctl activewindow -j | jq -e '.class == "org.omarchy.screensaver"' >/dev/null 2>&1
+}
+
+exit_screensaver() {
+  hyprctl eval 'hl.config({ cursor = { invisible = false } })' &>/dev/null || hyprctl keyword cursor:invisible false &>/dev/null || true
+  pkill -x ttfx 2>/dev/null
+  pkill -f '[o]rg.omarchy.screensaver' 2>/dev/null
+  exit 0
+}
+
+trap exit_screensaver SIGINT SIGTERM SIGHUP SIGQUIT
+
+printf '\033]11;rgb:00/00/00\007'
+hyprctl eval 'hl.config({ cursor = { invisible = true } })' &>/dev/null || hyprctl keyword cursor:invisible true &>/dev/null
+
+tty_path=$(tty 2>/dev/null)
+
+wait_for_terminal_resize() {
+  local deadline=$((SECONDS + 5))
+  local current="" previous="" rows=0 columns=0 stable_samples=0
+
+  while ((SECONDS < deadline)); do
+    current=$(stty size 2>/dev/null || true)
+    read -r rows columns <<<"$current"
+
+    if [[ $current == "$previous" ]] && ((rows > 24 && columns > 80)); then
+      stable_samples=$((stable_samples + 1))
+      ((stable_samples >= 8)) && return 0
+    else
+      stable_samples=0
+    fi
+
+    previous=$current
+    sleep 0.05
+  done
+}
+
+wait_for_terminal_resize
+
+# Undertale human souls, in a fixed loop. The effect that introduces each
+# screen and the final soul/text always share the next soul's color.
+colors=(FF0000 0078FF 00C853 A020F0 FFD700 FF8C00 00D9FF)
+effects=(wipe slide expand randomsequence decrypt wipe slide)
+index=0
+
+while true; do
+  color=${colors[$index]}
+  effect=${effects[$index]}
+
+  common=(
+    -i "$HOME/.config/omarchy/branding/screensaver.txt"
+    --frame-rate 60
+    --canvas-width 0
+    --canvas-height 0
+    --reuse-canvas
+    --anchor-canvas c
+    --anchor-text c
+    --no-eol
+    --no-restore-cursor
+  )
+
+  case "$effect" in
+    decrypt)
+      ttfx "${common[@]}" decrypt --ciphertext-colors "$color" --final-gradient-stops "$color" &
+      ;;
+    *)
+      ttfx "${common[@]}" "$effect" --final-gradient-stops "$color" &
+      ;;
+  esac
+
+  while pgrep -t "${tty_path#/dev/}" -x ttfx >/dev/null; do
+    if read -n1 -t 1 || ! screensaver_in_focus; then
+      exit_screensaver
+    fi
+  done
+
+  # Keep the completed soul visible long enough to be readable before the
+  # next soul begins its same-color transition.
+  linger_until=$((SECONDS + 5))
+  while ((SECONDS < linger_until)); do
+    if read -n1 -t 0.25 || ! screensaver_in_focus; then
+      exit_screensaver
+    fi
+  done
+
+  index=$(((index + 1) % ${#colors[@]}))
+done

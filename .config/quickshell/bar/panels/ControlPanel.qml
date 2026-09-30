@@ -94,7 +94,7 @@ PanelWindow {
             anchors.verticalCenter: parent.verticalCenter
             width: 30
             height: 16
-            radius: 8
+            radius: root.charaRice ? 2 : 8
             color: parent.active ? root.fillActive : toggleMa.containsMouse ? root.fillHover : root.fillIdle
             border.color: (parent.active || toggleMa.containsMouse) ? root.seal : root.sep
             border.width: 1
@@ -102,7 +102,7 @@ PanelWindow {
             Rectangle {
                 width: 10
                 height: 10
-                radius: 5
+                radius: root.charaRice ? 0 : 5
                 anchors.verticalCenter: parent.verticalCenter
                 x: parent.parent.active ? parent.width - width - 3 : 3
                 color: parent.parent.active ? root.seal : root.sumi
@@ -123,13 +123,14 @@ PanelWindow {
 
     Rectangle {
         id: card
-        width: 240
+        width: root.charaRice ? 260 : 240
         height: col.implicitHeight + 24
         radius: ctrlPanel.reveal > 0.001 ? root.pillRadius : 0
         color: root.bg
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: Math.round(Math.max(6, Math.min(root.launcherBarX - width / 2, parent.width - width - 6)))
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -154,8 +155,8 @@ PanelWindow {
                 height: 24
                 UiText {
                     anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter
-                    text: "Control"
-                    color: root.ink; font.family: root.mono; font.pixelSize: 13
+                    text: root.charaRice ? "* CONTROL" : "Control"
+                    color: root.ink; font.family: root.charaRice ? root.pixelFont : root.mono; font.pixelSize: root.charaRice ? 18 : 13
                     font.letterSpacing: 2; font.weight: Font.Medium
                 }
                 UiText {
@@ -396,6 +397,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
         // open to the right of the card, or to the left if there's no room
         x: (card.x + card.width + ctrlPanel.gap + width <= parent.width - 6)
            ? card.x + card.width + ctrlPanel.gap
@@ -497,6 +499,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
         // same side as splitCard; if SPLITS is also open, stack below it
         x: (card.x + card.width + ctrlPanel.gap + width <= parent.width - 6)
            ? card.x + card.width + ctrlPanel.gap

@@ -10,6 +10,12 @@ required=(
   .config/hypr/hyprland.lua
   .config/omarchy/shell.json
   .config/quickshell/bar/shell.qml
+  .config/omarchy/themes/chara-crimson/colors.toml
+  .config/omarchy/themes/chara-crimson/chromium.theme
+  .config/quickshell/bar/modules/PixelPanelFrame.qml
+  .config/omarchy/plugins/chara.menu/Menu.qml
+  .config/opencode/themes/lucent-chara.json
+  .config/fastfetch/config.jsonc
 )
 for path in "${required[@]}"; do
   [[ -f $path ]] || { printf 'Missing required file: %s\n' "$path" >&2; exit 1; }
@@ -22,6 +28,7 @@ done < <(rg -l '^#!.*\b(bash|sh)\b' .config .local scripts install.sh uninstall.
 while IFS= read -r json; do
   jq empty "$json"
 done < <(find .config -type f -name '*.json' -print | LC_ALL=C sort)
+jq empty .config/fastfetch/config.jsonc
 
 python - <<'PY'
 import ast
@@ -33,12 +40,12 @@ for path in sorted(Path('.').glob('**/*.py')):
 PY
 
 private_pattern='(/home/chara|Troia|Foggia|eDP-1|AG15-71P|JBL TUNE510BT|F8:AB:E5|015312|gho_[A-Za-z0-9_]+|github_pat_[A-Za-z0-9_]+)'
-if rg -n -I -g '!scripts/validate.sh' "$private_pattern" .; then
+if rg --hidden -n -I -g '!.git/**' -g '!scripts/validate.sh' "$private_pattern" .; then
   printf 'Private or machine-specific content detected.\n' >&2
   exit 1
 fi
 
-if find .config/omarchy/themes/chara-determination -type f \
+if find .config/omarchy/themes .config/fastfetch -type f \
     \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) \
     -print -quit | grep -q .; then
   printf 'Redistributable theme must not contain third-party artwork.\n' >&2

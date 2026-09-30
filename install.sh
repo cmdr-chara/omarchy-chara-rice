@@ -108,7 +108,7 @@ if [[ $enable_live_wallpaper == true ]]; then
   fi
 fi
 
-omarchy theme set 'Chara Determination'
+OMARCHY_THEME_SKIP_BACKGROUND=1 omarchy theme set 'Chara Crimson'
 hyprctl reload >/dev/null
 if [[ -n $(hyprctl configerrors) ]]; then
   printf 'Hyprland reported configuration errors after installation.\n' >&2

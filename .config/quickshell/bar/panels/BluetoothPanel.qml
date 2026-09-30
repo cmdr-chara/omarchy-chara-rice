@@ -75,6 +75,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: Math.round(Math.max(6, Math.min(root.bluetoothBarX - width / 2, parent.width - width - 6)))
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -103,7 +104,7 @@ PanelWindow {
                     UiText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: "Bluetooth"
-                        color: root.ink; font.family: root.mono; font.pixelSize: 13
+                        color: root.ink; font.family: root.charaRice ? root.pixelFont : root.mono; font.pixelSize: root.charaRice ? 18 : 13
                         font.letterSpacing: 2; font.weight: Font.Medium
                     }
                     Row {

@@ -168,6 +168,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: Math.round(Math.max(6, Math.min(root.volumeBarX - width / 2, parent.width - width - 6)))
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -196,10 +197,10 @@ PanelWindow {
                 UiText {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
-                    text: "Volume"
+                    text: root.charaRice ? "* AUDIO" : "Volume"
                     color: root.ink
-                    font.family: root.mono
-                    font.pixelSize: 13
+                    font.family: root.charaRice ? root.pixelFont : root.mono
+                    font.pixelSize: root.charaRice ? 18 : 13
                     font.letterSpacing: 2
                     font.weight: Font.Medium
                 }
@@ -243,13 +244,22 @@ PanelWindow {
                 }
                 Rectangle {
                     anchors.bottom: parent.bottom
-                    width: parent.width; height: 8; radius: 4
+                    width: parent.width; height: 8; radius: root.charaRice ? 0 : 4
                     color: root.fillActive
                     Rectangle {
                         width: parent.width * (volPanel.muted ? 0 : Math.min(volPanel.volume / 100, 1))
-                        height: parent.height; radius: 4
+                        height: parent.height; radius: root.charaRice ? 0 : 4
                         color: root.seal
                         Behavior on width { NumberAnimation { duration: 300 } }
+                    }
+                    Repeater {
+                        model: root.charaRice ? 15 : 0
+                        Rectangle {
+                            required property int index
+                            x: parent.width * (index + 1) / 16 - 1
+                            width: 2; height: parent.height
+                            color: root.bg
+                        }
                     }
                 }
             }
@@ -400,11 +410,11 @@ PanelWindow {
                             id: appTrack
                             anchors.left: parent.left; anchors.right: parent.right
                             anchors.bottom: parent.bottom
-                            height: 8; radius: 4
+                            height: 8; radius: root.charaRice ? 0 : 4
                             color: root.fillActive
                             Rectangle {
                                 width: parent.width * Math.min(appRow.liveVol / 100, 1)
-                                height: parent.height; radius: 4
+                                height: parent.height; radius: root.charaRice ? 0 : 4
                                 color: appRow.modelData.muted ? Qt.rgba(root.seal.r, root.seal.g, root.seal.b, 0.4) : root.seal
                             }
                             MouseArea {

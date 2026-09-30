@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch"
+picture="$config_dir/character-fullbody.png"
+
+if [[ -f $picture ]]; then
+  exec fastfetch --config "$config_dir/config.jsonc" \
+    --sixel "$picture" --logo-height 26 "$@"
+fi
+
+exec fastfetch --config "$config_dir/config.jsonc" "$@"

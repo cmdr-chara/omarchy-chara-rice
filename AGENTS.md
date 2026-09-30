@@ -5,7 +5,7 @@
 - Keep this public edition free of private locations, device addresses, user paths, package fingerprints, credentials, Steam assets, and non-redistributable artwork/fonts. Do not copy the private dotfiles snapshot wholesale.
 - Preserve the documented Omarchy compatibility gate, user-file backups, reversible uninstall behavior, and the boundary excluding `/usr/share/omarchy`.
 - Preserve the user's existing wallpaper unless live wallpaper was explicitly selected. Optional integrations and package installation must remain opt-in through their documented controls.
-- Keep Rise variant compatibility and readable terminal fallbacks. Preserve the existing design's distinction between persistent palette accents and temporary semantic colors rather than changing the visual direction during maintenance.
+- Keep Rise variant compatibility and readable terminal fallbacks. Preserve Chara Crimson's dark surfaces, persistent crimson accent, and semantic status colors when maintaining the current design.
 - Preserve attribution and redistribution boundaries in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Gallery screenshots do not grant permission to bundle the depicted third-party assets.
 
 ## Guidance and verification

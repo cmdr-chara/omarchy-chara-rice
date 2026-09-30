@@ -2,6 +2,7 @@
 bluetui
 curl
 file
+fastfetch
 foot
 imagemagick
 jq

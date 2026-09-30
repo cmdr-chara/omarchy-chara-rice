@@ -1,9 +1,9 @@
-# Chara Determination for Omarchy
+# Chara Crimson for Omarchy
 
-A dark burgundy Omarchy 4 desktop built around Rise V1, Undertale battle-box
-geometry, restrained Glitchtale energy, and semantic soul colors. The persistent
-accent is muted garnet `#A45D68`; bright soul colors are reserved for temporary
-states, notifications, and OSD feedback.
+A dark Omarchy 4 desktop inspired by Undertale's Chara: near-black surfaces,
+crimson `#F13B45` accents, pixel souls, and sharp battle-box frames. Rise V1
+provides a compact three-part HUD, with matching menus, popup panels, lock
+screen, terminal tools, and an optional red OpenCode theme.
 
 This is the public, portable edition of a real daily-driver configuration. It
 contains no passwords, tokens, personal location, device address, package
@@ -14,15 +14,31 @@ contains screenshots of the running desktop, credited below.
 
 ### Rise V1 desktop
 
-![Chara Determination desktop with Rise V1](screenshots/desktop.png)
+![Chara Crimson desktop with Rise V1](screenshots/desktop.png)
 
-### Soul notifications
+### Notifications and OSD
 
-![Soul-colored notification categories](screenshots/notifications.png)
+![Crimson notification and volume feedback](screenshots/notifications.png)
 
-### Volume OSD
+### Control panel
 
-![Chara volume OSD](screenshots/osd-volume.png)
+![Chara control panel with pixel corners](screenshots/control.png)
+
+### Apps menu
+
+![Chara Apps menu with application icons](screenshots/apps.png)
+
+### Audio panel
+
+![Crimson audio panel with segmented volume gauge](screenshots/audio.png)
+
+### SAVE lock screen
+
+![Chara SAVE lock screen](screenshots/lock.png)
+
+### OpenCode: lucent-chara
+
+![The selected crimson copy of lucent-orng in OpenCode](screenshots/opencode.png)
 
 The live scene visible in these screenshots is *Chara's eyes* by Steam
 Workshop uploader **f1re** ([Workshop item 3450338231](https://steamcommunity.com/sharedfiles/filedetails/?id=3450338231)).
@@ -31,12 +47,18 @@ The Wallpaper Engine asset itself is not included in this repository.
 ## What is included
 
 - Hyprland layout, animations, bindings, idle integration, and window behavior.
-- Rise V1 as the default bar, with the compatible V2 variant retained.
+- Rise V1 as the default bar, with five pixel soul workspaces, HP battery
+  status, segmented volume, and the compatible V2 variant retained.
 - Chara bar, lock screen, notifications, OSD, media, network, power, and
   workspace plugins.
 - Mirador workspace overview and Quick Look file preview.
-- Chara Determination theme palettes for the Omarchy shell.
+- Chara Crimson palette and matching dark browser color. The earlier Chara
+  Determination palette remains available as an alternative.
+- Pixel-framed Rise panels and a Chara menu that uses native application
+  discovery, icons, search, and launch behavior.
 - Matching Alacritty, Foot, Ghostty, Kitty, btop, and Starship configuration.
+- A crimson fastfetch system card with a text soul and local-picture support.
+- `lucent-chara`, a dark red copy of OpenCode's `lucent-orng` theme.
 - Safe Bluetooth helper and optional self-healing live-wallpaper service.
 - Reversible installer and uninstaller with user-state backups.
 
@@ -59,7 +81,7 @@ cd omarchy-chara-rice
 
 The installer backs up every overwritten user file under
 `~/.local/state/omarchy-chara-rice/backups/`, installs Rise V1, applies the
-Chara palette, reloads Hyprland, and restarts the Omarchy shell. It does not
+Chara Crimson palette, reloads Hyprland, and restarts the Omarchy shell. It does not
 replace the current wallpaper.
 
 Quick Look's D-Bus Space-key bridge and optional Nautilus context-menu file are
@@ -92,8 +114,35 @@ from the source documented in `THIRD_PARTY_NOTICES.md`, place it at:
 ~/.local/share/fonts/Determination/DeterminationMonoWeb.ttf
 ```
 
-Then run `fc-cache -f`. If the font is absent, the CHARA wordmark falls back to
-the normal monospace UI font.
+Then run `fc-cache -f`. The font supplies the CHARA wordmark, HUD text, and
+pixel headings. If it is absent, Qt uses its normal font fallback; body text
+continues to use JetBrains Mono.
+
+### Fastfetch picture
+
+Run `chara-fastfetch` for the crimson system card. It uses a text soul by
+default. To use an image you own locally, place it at:
+
+```text
+~/.config/fastfetch/character-fullbody.png
+```
+
+The helper displays that picture through sixel at 26 terminal rows. The
+maintainer's original Storyfell Chara portrait is preserved locally and is
+not distributed. Installing or uninstalling the rice leaves this local
+image untouched.
+
+### OpenCode
+
+The installer adds `lucent-chara` to your custom themes without changing
+OpenCode preferences. In OpenCode v2, press `Ctrl+P`, choose **Switch theme**,
+and select **lucent-chara** from the full theme list. Choose **Dark** in
+Appearance's **Color mode** setting.
+
+The theme duplicates `lucent-orng` from OpenCode `2.0.20`, preserving its dark
+surfaces, grayscale text, and remaining status and syntax colors while
+replacing the orange accents and menu tints with crimson. The original
+`lucent-orng` remains available.
 
 ### Live wallpaper
 
@@ -108,6 +157,24 @@ optional referenced scene can be enabled with:
 Edit `~/.config/chara-rice/live-wallpaper.env` to select a different Workshop
 item, monitor, asset directory, or FPS. The monitor defaults to automatic
 detection. No Workshop content is stored in this repository.
+
+### HUD preferences and previews
+
+Fresh Rise V1 settings use the compact Chara HUD. Existing Rise widget,
+color, and layout preferences remain authoritative. Use its Control panel
+to adjust them.
+
+```bash
+chara-rice status
+chara-rice panel control
+chara-rice panel calendar
+chara-rice close-panel
+chara-rice preview-lock
+chara-rice hide-preview
+```
+
+Panel shortcuts target Rise V1. Lock preview is dismissible and leaves the
+normal authentication flow intact.
 
 ## Key shortcuts
 
@@ -139,7 +206,8 @@ automatically.
 ./scripts/validate.sh
 ```
 
-The same checks run on every GitHub push and pull request.
+The same checks run on every GitHub push and pull request, including the isolated
+installer/uninstaller integration test.
 
 ## Credits and license
 
@@ -149,5 +217,10 @@ Mirador, Quick Look, optional fonts, and artwork references are documented in
 configured desktop; original Wallpaper Engine and fan-art files are not
 redistributed.
 
-This is an unofficial fan project and is not affiliated with Toby Fox, Camila
-Cuevas, Basecamp, or HANCORE Linux.
+The gallery and panel interactions were verified in the maintainer's native
+session. Installer and rollback tests use a temporary home and simulated
+system commands; they do not establish compatibility with every hardware or
+Omarchy version.
+
+This is an unofficial fan project and is not affiliated with Toby Fox,
+Basecamp, or HANCORE Linux.

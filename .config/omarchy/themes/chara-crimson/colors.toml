@@ -1,0 +1,38 @@
+mode = "dark"
+
+# Chara Crimson: ink, bone, and determination. The other souls stay in
+# semantic states and ANSI colors so crimson remains the desktop's accent.
+accent = "#F13B45"
+selection = "#492127"
+muted = "#95838B"
+
+background = "#100D11"
+dark_background = "#0B090D"
+darker_background = "#07060A"
+lighter_background = "#24171E"
+
+foreground = "#F0E5DF"
+dark_foreground = "#95838B"
+light_foreground = "#D6C5C3"
+bright_foreground = "#FFF4E8"
+
+hyprland_active_border = "rgba(F13B45ee) rgba(9B2430ee) 45deg"
+hyprland_inactive_border = "rgba(4D343Ebb)"
+active_border_color = "#F13B45"
+active_tab_background = "#492127"
+
+red = "#F13B45"
+yellow = "#E9C079"
+orange = "#DE9369"
+green = "#9BC28D"
+cyan = "#7EC5C8"
+blue = "#88A9DB"
+magenta = "#C998CF"
+brown = "#95766D"
+
+bright_red = "#FF8993"
+bright_yellow = "#FFE0A1"
+bright_green = "#C2D9B5"
+bright_cyan = "#AFE4E2"
+bright_blue = "#B9CDF2"
+bright_magenta = "#E6BFE7"

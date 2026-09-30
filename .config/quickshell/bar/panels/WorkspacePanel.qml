@@ -40,6 +40,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: Math.round(Math.max(6, Math.min(root.workspaceBarX - width / 2, parent.width - width - 6)))
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -63,8 +64,8 @@ PanelWindow {
                 height: 24
                 UiText {
                     anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter
-                    text: "Workspaces"
-                    color: root.ink; font.family: root.mono; font.pixelSize: 13
+                    text: root.charaRice ? "* WORKSPACES" : "Workspaces"
+                    color: root.ink; font.family: root.charaRice ? root.pixelFont : root.mono; font.pixelSize: root.charaRice ? 18 : 13
                     font.letterSpacing: 2; font.weight: Font.Medium
                 }
                 UiText {
@@ -95,18 +96,27 @@ PanelWindow {
                         border.width: 1
                         Behavior on color { ColorAnimation { duration: 120 } }
 
-                        UiText {
+                        PixelSoul {
+                            visible: root.charaRice
                             anchors.left: parent.left; anchors.leftMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
-                            text: "Workspace " + modelData.id
+                            color: parent.isActive ? root.seal : root.ink
+                            filled: parent.isActive
+                        }
+
+                        UiText {
+                            anchors.left: parent.left; anchors.leftMargin: root.charaRice ? 32 : 10
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: (root.charaRice ? "SLOT " : "Workspace ") + modelData.id
                             color: (ma.containsMouse || isActive) ? root.seal : root.ink
-                            font.family: root.mono; font.pixelSize: 12
+                            font.family: root.charaRice ? root.pixelFont : root.mono
+                            font.pixelSize: root.charaRice ? 16 : 12
                             font.weight: isActive ? Font.Medium : Font.Normal
                         }
                         UiText {
                             anchors.right: parent.right; anchors.rightMargin: 10
                             anchors.verticalCenter: parent.verticalCenter
-                            text: modelData.toplevels && modelData.toplevels.values ? modelData.toplevels.values.length : ""
+                            text: (modelData.toplevels && modelData.toplevels.values ? modelData.toplevels.values.length : 0) + (root.charaRice ? " WIN" : "")
                             color: root.sumiHi; font.family: root.mono; font.pixelSize: 10
                         }
 

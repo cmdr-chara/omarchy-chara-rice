@@ -19,6 +19,8 @@ credentials*
 secrets*
 
 # Local-only copyrighted artwork and user configuration
-.config/omarchy/themes/chara-determination/backgrounds/
-.config/omarchy/themes/chara-determination/preview.png
+.config/omarchy/themes/*/backgrounds/
+.config/omarchy/themes/*/preview.png
+.config/fastfetch/*.png
+.config/fastfetch/*.jpg
 .local/share/fonts/

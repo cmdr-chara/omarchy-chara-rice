@@ -76,6 +76,18 @@ Item {
     }
 
     IpcHandler {
+        target: "chara-rice"
+        function show(name: string): string {
+            if (!router.canDispatch() || !router.variantHost.activeItem.showCharaPanel)
+                return "unavailable"
+            return router.variantHost.activeItem.showCharaPanel(name)
+        }
+        function close(): string {
+            return router.invoke("closePopups") ? "ok" : "unavailable"
+        }
+    }
+
+    IpcHandler {
         target: "lifecycle"
         function version(): string {
             return router.variantHost.runningVariant === "v2" ? "V2" : "V1"

@@ -659,7 +659,7 @@ PanelWindow {
         // ── split state (positional, per within-region gap) ──
         property var leftSplits:  [false, false, false, false, false, false]   // gaps in leftModel
         property var rightSplits: [false, false, false, false, false, false]   // gaps in rightModel
-        property var boundarySplits: [false, false]   // [left↔center, center↔right]
+        property var boundarySplits: [barSlot.root.charaRice, barSlot.root.charaRice]   // [left↔center, center↔right]
 
         readonly property real lcBoundaryX: leftRowItem.x + leftRowItem.width + 9    // just right of Claude
         readonly property real crBoundaryX: rightRowItem.x - 9                       // just left of Mpris
@@ -840,6 +840,28 @@ PanelWindow {
                 border.width: barSlot.root.pillBorderW
                 PillShadow { theme: barSlot.root }
                 // no Behavior: tracks the slot positions directly as the gap opens
+
+                Rectangle {
+                    visible: barSlot.root.charaRice
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.leftMargin: 1
+                    anchors.topMargin: 1
+                    width: Math.max(0, Math.min(24, parent.width - 2))
+                    height: 2
+                    color: barSlot.root.seal
+                }
+                Rectangle {
+                    visible: barSlot.root.charaRice
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 1
+                    anchors.bottomMargin: 1
+                    width: Math.max(0, Math.min(24, parent.width - 2))
+                    height: 2
+                    color: barSlot.root.seal
+                    opacity: 0.45
+                }
             }
         }
 

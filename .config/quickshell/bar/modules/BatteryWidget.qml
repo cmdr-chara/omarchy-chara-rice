@@ -71,7 +71,7 @@ Item {
         UiText {
             anchors.verticalCenter: parent.verticalCenter
             visible: !root.compactBattery
-            text: "BAT"
+            text: root.charaRice ? "HP" : "BAT"
             color: Qt.rgba(root.ink.r, root.ink.g, root.ink.b, 0.6)
             font.family: root.mono
             font.pixelSize: 12
@@ -103,7 +103,7 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: 16
                 height: 9
-                radius: 2.5
+                radius: root.charaRice ? 0 : 2.5
                 color: "transparent"
                 border.width: 1.2
                 border.color: rootMod.battColor

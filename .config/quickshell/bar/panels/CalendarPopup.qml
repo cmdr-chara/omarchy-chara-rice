@@ -35,13 +35,14 @@ PanelWindow {
 
     Rectangle {
         id: card
-        width: 280
+        width: root.charaRice ? 320 : 280
         height: col.implicitHeight + 24
         radius: reveal > 0.001 ? root.pillRadius : 0
         color: root.bg
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: Math.round((parent.width - width) / 2)
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -51,6 +52,12 @@ PanelWindow {
         Keys.onPressed: function(event) {
             if (event.key === Qt.Key_Escape) {
                 root.calendarVisible = false;
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Left || event.key === Qt.Key_Right) {
+                root.calendarMonthOffset += event.key === Qt.Key_Left ? -1 : 1;
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Home) {
+                root.calendarMonthOffset = 0;
                 event.accepted = true;
             }
         }
@@ -94,8 +101,8 @@ PanelWindow {
                     anchors.centerIn: parent
                     text: root.calendarMonthName + "  " + root.calendarYear
                     color: monthMa.containsMouse && root.calendarMonthOffset !== 0 ? root.seal : root.ink
-                    font.family: root.mono
-                    font.pixelSize: 12
+                    font.family: root.charaRice ? root.pixelFont : root.mono
+                    font.pixelSize: root.charaRice ? 18 : 12
                     font.letterSpacing: 2
                     font.weight: Font.Medium
                     MouseArea {
@@ -146,8 +153,8 @@ PanelWindow {
                             text: modelData
                             color: index >= 5 ? root.seal : root.inkDeep
                             opacity: index >= 5 ? 0.85 : 0.7
-                            font.family: root.mono
-                            font.pixelSize: 10
+                            font.family: root.charaRice ? root.pixelFont : root.mono
+                            font.pixelSize: root.charaRice ? 14 : 10
                             font.letterSpacing: 2
                         }
                     }
@@ -161,17 +168,20 @@ PanelWindow {
                 columnSpacing: 0
                 width: parent.width
                 Repeater {
-                    model: root.calendarCells
+                    // Keep the date items in place while changing months. An
+                    // array model rebuilt every delegate and briefly shuffled
+                    // the Grid during replacement; only their content changes.
+                    model: root.calendarCells.length
                     delegate: Item {
-                        required property var modelData
                         required property int index
+                        readonly property var cell: root.calendarCells[index]
                         width: parent.width / 7
                         height: 28
 
                         readonly property int dayOfWeek: index % 7
-                        readonly property bool isCurrentMonth: modelData.day !== 0
-                        readonly property bool isToday: modelData.today
-                        readonly property bool isSelected: isCurrentMonth && root.selectedDay === modelData.day && root.calendarMonthOffset === 0
+                        readonly property bool isCurrentMonth: cell.day !== 0
+                        readonly property bool isToday: cell.today
+                        readonly property bool isSelected: isCurrentMonth && root.selectedDay === cell.day && root.calendarMonthOffset === 0
 
                         readonly property color textColor: {
                             if (isToday) return root.seal.hsvValue < 0.5 ? root.ink : root.paper;
@@ -181,14 +191,14 @@ PanelWindow {
 
                         Rectangle {
                             anchors.centerIn: parent
-                            width: 24; height: 24; radius: 12
+                            width: 24; height: 24; radius: root.charaRice ? 2 : 12
                             color: root.seal
                             visible: isToday
                         }
 
                         Rectangle {
                             anchors.centerIn: parent
-                            width: 24; height: 24; radius: 12
+                            width: 24; height: 24; radius: root.charaRice ? 2 : 12
                             border.color: root.seal; border.width: 1
                             color: "transparent"
                             visible: isSelected && !isToday
@@ -196,11 +206,11 @@ PanelWindow {
 
                         UiText {
                             anchors.centerIn: parent
-                            text: modelData.day === 0 ? "" : modelData.day
+                            text: cell.day === 0 ? "" : cell.day
                             color: textColor
                             opacity: isCurrentMonth ? 1.0 : 0.35
-                            font.family: root.mono
-                            font.pixelSize: 12
+                            font.family: root.charaRice ? root.pixelFont : root.mono
+                            font.pixelSize: root.charaRice ? 16 : 12
                             font.weight: isToday ? Font.Medium : Font.Light
                         }
 
@@ -209,7 +219,7 @@ PanelWindow {
                             hoverEnabled: isCurrentMonth
                             enabled: isCurrentMonth
                             cursorShape: isCurrentMonth ? Qt.PointingHandCursor : Qt.ArrowCursor
-                            onClicked: root.selectedDay = modelData.day
+                            onClicked: root.selectedDay = cell.day
                         }
                     }
                 }

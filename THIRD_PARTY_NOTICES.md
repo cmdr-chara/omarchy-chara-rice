@@ -39,22 +39,29 @@ https://www.behance.net/gallery/31268855/Determination-Better-Undertale-Font
 
 Install the unchanged font locally at
 `~/.local/share/fonts/Determination/DeterminationMonoWeb.ttf` to enable the
-CHARA wordmark. Without it, Qt uses the normal monospace fallback.
+CHARA wordmark and pixel headings. Without it, Qt uses the normal monospace
+fallback.
+
+## OpenCode theme
+
+- Project: https://github.com/anomalyco/opencode
+- Theme source: `packages/tui/src/theme/assets/lucent-orng.json` at tag `v2.0.20`.
+- Source: https://github.com/anomalyco/opencode/blob/v2.0.20/packages/tui/src/theme/assets/lucent-orng.json
+- License: MIT; copy retained in `LICENSES/OPENCODE-MIT.txt`.
+- `lucent-chara` is an adapted copy with crimson accents and menu tints.
 
 ## Artwork and live wallpaper
 
-No original Undertale, Glitchtale, DeviantArt, Pinterest, Pixiv, Steam Workshop,
+No original Undertale, DeviantArt, Pinterest, Pixiv, Steam Workshop,
 or Wallpaper Engine artwork file is redistributed by this repository. The
 README gallery includes screenshots of the user's running desktop, in which the
 following live wallpaper is visible. Optional sources and inspirations:
 
 - *Chara's eyes*, uploader f1re:
   https://steamcommunity.com/sharedfiles/filedetails/?id=3450338231
-- *Glitchtale Episode 8 - Animosity Chara*, Emuleel-Arts:
-  https://www.deviantart.com/emuleel-arts/art/Glitchtale-Episode-8-Animosity-Chara-946343882
-- *Hate Chara (Screenshot Redraw)*, CamilaAnims:
-  https://www.deviantart.com/camilaanims/art/Hate-Chara-Screenshot-Redraw-840936203
+- The maintainer's original Storyfell Chara fastfetch portrait stays local.
+  The public helper reuses a user-provided image without bundling it or
+  assuming its artist or redistribution rights.
 
-Undertale is owned by Toby Fox. Glitchtale is owned by Camila Cuevas. This is
-an unofficial fan-made desktop configuration and is not affiliated with or
-endorsed by either creator.
+Undertale is owned by Toby Fox. This is an unofficial fan-made desktop
+configuration and is not affiliated with or endorsed by its creator.

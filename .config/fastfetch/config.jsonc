@@ -1,0 +1,153 @@
+{
+  "$schema": "https://raw.githubusercontent.com/fastfetch-cli/fastfetch/2.68.1/doc/json_schema.json",
+  "logo": {
+    "type": "data",
+    "source": "  ♥  CHARA\n  ╱╲\n ╱██╲\n╱████╲\n  ██\n  ██",
+    "color": {
+      "1": "red"
+    },
+    "padding": {
+      "top": 1,
+      "right": 3,
+      "left": 1
+    }
+  },
+  "general": {
+    "detectVersion": false
+  },
+  "display": {
+    "disableLinewrap": true,
+    "separator": "  ",
+    "brightColor": false,
+    "color": {
+      "keys": "red",
+      "title": "white"
+    },
+    "size": {
+      "ndigits": 1
+    },
+    "duration": {
+      "abbreviation": true
+    },
+    "percent": {
+      "type": 3,
+      "ndigits": 0
+    },
+    "bar": {
+      "width": 10,
+      "char": {
+        "elapsed": "━",
+        "total": "─"
+      },
+      "border": null,
+      "color": {
+        "elapsed": "red",
+        "total": "light_black"
+      }
+    }
+  },
+  "modules": [
+    "break",
+    {
+      "type": "title",
+      "format": "{#bold_red}♥ {#bold_white}{user-name}{#light_black}@{host-name}{#}"
+    },
+    {
+      "type": "custom",
+      "format": "{#red}  * STAY DETERMINED.{#}"
+    },
+    "break",
+    {
+      "type": "custom",
+      "format": "{#red}╭─ SYSTEM ───────────────────────────────{#}"
+    },
+    {
+      "type": "os",
+      "key": "│ OS       ",
+      "format": "{name} {#light_black}· {arch}{#}"
+    },
+    {
+      "type": "kernel",
+      "key": "│ Kernel   ",
+      "format": "{release}"
+    },
+    {
+      "type": "wm",
+      "key": "│ Desktop  ",
+      "format": "{pretty-name} {#light_black}· {protocol-name}{#}"
+    },
+    {
+      "type": "terminal",
+      "key": "│ Terminal ",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "shell",
+      "key": "│ Shell    ",
+      "format": "{pretty-name}"
+    },
+    {
+      "type": "packages",
+      "key": "│ Packages ",
+      "format": "{all} {#light_black}· {pacman} pacman{#}"
+    },
+    {
+      "type": "custom",
+      "format": "{#red}├─ HARDWARE ─────────────────────────────{#}"
+    },
+    {
+      "type": "host",
+      "key": "│ Model    ",
+      "format": "{name}"
+    },
+    {
+      "type": "cpu",
+      "key": "│ CPU      ",
+      "format": "{name}"
+    },
+    {
+      "type": "gpu",
+      "key": "│ GPU      ",
+      "detectionMethod": "pci",
+      "format": "{name}"
+    },
+    {
+      "type": "display",
+      "key": "│ Display  ",
+      "format": "{width} × {height} {#light_black}· {refresh-rate} Hz{#}"
+    },
+    {
+      "type": "custom",
+      "format": "{#red}├─ VITALS ───────────────────────────────{#}"
+    },
+    {
+      "type": "memory",
+      "key": "│ Memory   ",
+      "format": "{percentage-bar}  {percentage}  {used} / {total}"
+    },
+    {
+      "type": "disk",
+      "key": "│ Root     ",
+      "folders": "/",
+      "format": "{size-percentage-bar}  {size-percentage}  {size-used} / {size-total}"
+    },
+    {
+      "type": "battery",
+      "key": "│ Battery  ",
+      "format": "{capacity-bar}  {capacity}  {status}"
+    },
+    {
+      "type": "uptime",
+      "key": "│ Uptime   "
+    },
+    {
+      "type": "custom",
+      "format": "{#red}╰───────────────────────────────────────{#}"
+    },
+    {
+      "type": "custom",
+      "format": "  {#red}♥{#} {#cyan}♥{#} {#yellow}♥{#} {#green}♥{#} {#blue}♥{#} {#magenta}♥{#}"
+    },
+    "break"
+  ]
+}

@@ -12,8 +12,8 @@ const WANTED = [
     { target: "color04",    keys: ["color4", "blue"] },
     { target: "color05",    keys: ["color5", "magenta"] },
     { target: "color06",    keys: ["color6", "cyan"] },
-    { target: "color07",    keys: ["color7", "bright_fg", "light_fg"] },
-    { target: "sumi",       keys: ["color8", "muted", "dark_fg"] },
+    { target: "color07",    keys: ["color7", "bright_foreground", "light_foreground", "bright_fg", "light_fg"] },
+    { target: "sumi",       keys: ["color8", "muted", "dark_foreground", "dark_fg"] },
     { target: "accentHint", keys: ["accent"] },
 ];
 

@@ -39,9 +39,9 @@ Item {
         anchors.centerIn: parent
         text: rootMod.timeStr
         color: root.ink
-        font.family: root.mono
-        font.pixelSize: 12
-        font.letterSpacing: 1
+        font.family: root.charaRice ? root.pixelFont : root.mono
+        font.pixelSize: root.charaRice ? 18 : 12
+        font.letterSpacing: root.charaRice ? 0.5 : 1
     }
 
     TooltipMixin { id: tip; root: rootMod.root; owner: rootMod; text: rootMod.tooltipText }

@@ -61,6 +61,7 @@ Item {
 
             // track capsule
             Rectangle {
+                visible: !root.charaRice
                 anchors.verticalCenter: parent.verticalCenter
                 width: parent.width
                 height: 8
@@ -70,6 +71,7 @@ Item {
 
             // fill capsule — seal pill like the active workspace
             Rectangle {
+                visible: !root.charaRice
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 width: Math.max(slider.ratio > 0 ? 8 : 0, parent.width * slider.ratio)
@@ -77,6 +79,22 @@ Item {
                 radius: 4
                 color: root.seal
                 Behavior on width { NumberAnimation { duration: 150; easing.type: Easing.OutCubic } }
+            }
+
+            Row {
+                visible: root.charaRice
+                anchors.centerIn: parent
+                spacing: 1
+                Repeater {
+                    model: 8
+                    Rectangle {
+                        required property int index
+                        width: 3.5
+                        height: 8
+                        color: !rootMod.muted && index < Math.ceil(8 * slider.ratio)
+                            ? root.seal : Qt.rgba(root.ink.r, root.ink.g, root.ink.b, 0.16)
+                    }
+                }
             }
         }
 

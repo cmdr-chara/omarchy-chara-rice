@@ -44,6 +44,22 @@ Item {
     function reloadTheme() { theme.ipcReloadTheme() }
     function openPicker(mode) { theme.ipcOpenPicker(mode) }
 
+    // A small keyboard/CLI entry point for existing panels; never executes an
+    // action inside them or accepts arbitrary property names.
+    function showCharaPanel(name) {
+        var panels = {
+            control: "controlVisible", workspaces: "workspaceVisible",
+            volume: "volVisible", calendar: "calendarVisible",
+            battery: "batteryVisible", brightness: "brightnessVisible"
+        }
+        if (!Object.prototype.hasOwnProperty.call(panels, name)) return "unknown panel"
+        theme.activateFocusedPopupScreen()
+        theme.closePopups()
+        if (name === "calendar") theme.openCalendar()
+        else theme[panels[name]] = true
+        return "ok"
+    }
+
     // QtWayland creates a nameless 0x0 placeholder screen while no real output
     // exists; exclude it so no unusable layer surface is created. A new real
     // ShellScreen identity makes Variants destroy the old BarSlot and

@@ -2,9 +2,9 @@
 
 ## Identity
 
-The desktop uses near-black and dark burgundy foundations with muted garnet
-`#A45D68` as the persistent accent. Permanent UI avoids saturated bright red.
-Undertale's soul colors appear only when they communicate a state:
+Chara Crimson uses near-black `#100D11`, warm bone text `#F0E5DF`, and crimson
+`#F13B45` as its persistent accent. Red pixel souls, SAVE text, and squared
+corner frames carry the Undertale identity. Other soul colors communicate state:
 
 - red: determination, critical failure, or destructive confirmation;
 - orange: warning or active recording;
@@ -12,9 +12,9 @@ Undertale's soul colors appear only when they communicate a state:
 - green: success and healthy state;
 - cyan: network and Bluetooth;
 - blue: capture and informational state;
-- purple: media and audio.
+- purple: secondary status and ANSI output.
 
-Rounded battle-box outlines, compact spacing, restrained translucency, and short
+Sharp battle-box corners, compact spacing, restrained translucency, and short
 animations keep the theme recognizable without sacrificing daily readability.
 
 ## Components
@@ -24,6 +24,12 @@ animations keep the theme recognizable without sacrificing daily readability.
 - Native Rise Codex usage is retained instead of adding a duplicate agent.
 - Mirador owns workspace overview; Quick Look owns file preview.
 - The live wallpaper is optional and isolated in a restartable user service.
+- Chara's menu reuses Omarchy's native application catalog, with a local
+  AppLibrary fallback when a cloned plugin's scoped facade lacks the catalog.
+- Rise V1 panels share a static PixelPanelFrame; the existing controls retain
+  input ownership. The calendar keeps date delegates stable across month changes.
+- The browser keeps a dark burgundy seed color. `lucent-chara` preserves
+  OpenCode's transparent dark surfaces while recoloring its orange accents.
 
 ## Portability boundaries
 

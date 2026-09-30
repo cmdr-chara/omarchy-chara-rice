@@ -14,7 +14,7 @@ Item {
     implicitWidth: logoContentWidth + logoPadding
     implicitHeight: 28
 
-    readonly property string tooltipText: "Control center"
+    readonly property string tooltipText: root.charaRice ? "SAVE POINT · Control center" : "Control center"
     readonly property bool logoIconMode: root.launcherLogoMode === "icon"
     readonly property bool charaTextLogo: !logoIconMode && root.launcherLogoText === "chara"
     readonly property bool hyprlandLogo: !logoIconMode && root.launcherLogoText === "hyprland"
@@ -33,7 +33,7 @@ Item {
     readonly property real archWordArchWidth: Math.round(archWordHeight * 605 / 231)
     readonly property real archWordLinuxWidth: Math.round(archWordHeight * 549 / 230)
     readonly property real archWordmarkWidth: archWordLeftPad + archWordRightPad + archWordLogoWidth + archWordGap + archWordArchWidth + archWordJoinGap + archWordLinuxWidth
-    readonly property real logoImageWidth: charaTextLogo ? 62 : archTextLogo ? archWordmarkWidth : Math.round(logoHeight * logoAspect)
+    readonly property real logoImageWidth: charaTextLogo ? (root.charaRice ? 110 : 62) : archTextLogo ? archWordmarkWidth : Math.round(logoHeight * logoAspect)
     readonly property real logoIconSlotWidth: 16
     readonly property real logoContentWidth: logoIconMode ? logoIconSlotWidth : logoImageWidth
     readonly property color archBrandTextColor: root.barColorIsAccent ? root.sealRaw : root.accentHint
@@ -45,7 +45,7 @@ Item {
         duration: 2600; loops: Animation.Infinite
         // gate: only animate while hovered or control panel open — otherwise the
         // Canvas repainted 24/7 via onPhaseChanged even when nobody looks
-        running: ma.containsMouse || root.controlVisible
+        running: !root.charaRice && (ma.containsMouse || root.controlVisible)
     }
 
     // shadow as a SIBLING of the pill (the pill itself clips, for the wave —
@@ -78,7 +78,7 @@ Item {
             anchors.fill: parent
             // only present while active (hovered or control panel open); fully
             // gone when idle. Fades so it appears/disappears smoothly.
-            opacity: (ma.containsMouse || root.controlVisible) ? 0.55 : 0
+            opacity: !root.charaRice && (ma.containsMouse || root.controlVisible) ? 0.55 : 0
             visible: opacity > 0.001
             Behavior on opacity { NumberAnimation { duration: 220; easing.type: Easing.OutCubic } }
 
@@ -126,7 +126,7 @@ Item {
         height: rootMod.logoHeight
 
         UiText {
-            visible: rootMod.charaTextLogo
+            visible: rootMod.charaTextLogo && !root.charaRice
             anchors.centerIn: parent
             text: "CHARA"
             color: root.seal
@@ -136,6 +136,27 @@ Item {
             font.weight: Font.Normal
             font.letterSpacing: 1.0
             font.hintingPreference: Font.PreferFullHinting
+        }
+
+        Row {
+            visible: rootMod.charaTextLogo && root.charaRice
+            anchors.centerIn: parent
+            spacing: 7
+            PixelSoul { anchors.verticalCenter: parent.verticalCenter; color: root.seal }
+            UiText {
+                text: "CHARA"
+                anchors.verticalCenter: parent.verticalCenter
+                color: root.ink
+                font.family: root.pixelFont
+                font.pixelSize: 18
+            }
+            UiText {
+                text: "LV 20"
+                anchors.verticalCenter: parent.verticalCenter
+                color: root.seal
+                font.family: root.mono
+                font.pixelSize: 9
+            }
         }
 
         Item {

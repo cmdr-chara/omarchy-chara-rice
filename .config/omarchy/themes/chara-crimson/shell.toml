@@ -1,0 +1,136 @@
+# Coordinated shell surfaces. Sizes are logical pixels before monitor scaling.
+[bar]
+background = "#0B090D"
+background-alpha = 0.98
+text = "#F0E5DF"
+active = "#F13B45"
+scale-with-font = true
+size-horizontal = 30
+size-vertical = 30
+
+[hyprland]
+active-border = "rgba(F13B45ee) rgba(9B2430ee) 45deg"
+active-border-foreground = "#D6C5C3"
+
+[font]
+base-size = 12
+heading = 17
+display = 26
+
+[spacing]
+scale = 1.0
+scale-with-font = true
+panel-padding = 20
+popup-padding = 16
+control-height = 30
+
+[controls]
+normal-color = "#D6C5C3"
+normal-fill-alpha = 0.035
+normal-border = "#603A40"
+normal-border-width = 1
+normal-border-alpha = 0.8
+hover-cursor-color = "#FFF4E8"
+hover-cursor-fill-alpha = 0.10
+hover-cursor-border = "#F13B45"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 0.85
+focus-color = "#FFF4E8"
+focus-fill-alpha = 0.12
+focus-border = "#F13B45"
+focus-border-width = 2
+focus-border-alpha = 1.0
+selected-color = "#F13B45"
+selected-fill-alpha = 0.14
+selected-border = "#F13B45"
+selected-border-width = 1
+selected-border-alpha = 0.9
+pressed-fill-alpha = 0.22
+selection-fill-alpha = 0.35
+
+[popups]
+background = "#100D11"
+background-alpha = 0.98
+text = "#F0E5DF"
+border = "#603A40"
+border-alpha = 1.0
+border-width = 1
+
+[tooltip]
+background = "#0B090D"
+background-alpha = 0.98
+text = "#F0E5DF"
+border = "#603A40"
+border-alpha = 1.0
+
+[notifications]
+background = "#100D11"
+background-alpha = 0.98
+text = "#F0E5DF"
+border = "#603A40"
+border-alpha = 1.0
+border-width = 1
+countdown = "#F13B45"
+
+[launcher]
+background = "#0B090D"
+background-alpha = 0.98
+text = "#F0E5DF"
+border = "#F13B45"
+border-alpha = 0.9
+scrim = "#07060A"
+scrim-alpha = 0.68
+selected-background = "#492127"
+selected-background-alpha = 0.8
+selected-text = "#FFF4E8"
+selected-border = "#F13B45"
+selected-border-alpha = 1.0
+
+[menu]
+background = "#100D11"
+background-alpha = 0.98
+text = "#F0E5DF"
+border = "#603A40"
+border-alpha = 1.0
+scrim = "#07060A"
+scrim-alpha = 0.68
+selected-background = "#492127"
+selected-background-alpha = 0.8
+selected-text = "#FFF4E8"
+selected-border = "#F13B45"
+selected-border-alpha = 1.0
+
+[polkit]
+background = "#100D11"
+background-alpha = 1.0
+text = "#F0E5DF"
+text-error = "#FF8993"
+border = "#F13B45"
+border-error = "#FF8993"
+border-alpha = 1.0
+scrim = "#07060A"
+scrim-alpha = 0.7
+accent = "#F13B45"
+
+[lock]
+background = "#0B090D"
+background-alpha = 0.96
+text = "#FFF4E8"
+placeholder = "#95838B"
+text-error = "#FF8993"
+border = "#603A40"
+border-active = "#F13B45"
+border-error = "#FF8993"
+border-alpha = 1.0
+border-width = 2
+selection = "#F13B45"
+selection-alpha = 0.4
+
+[image-picker]
+scrim = "#07060A"
+scrim-alpha = 0.65
+text = "#FFF4E8"
+selected-border = "#F13B45"
+selected-border-alpha = 1.0
+unselected-border = "#95838B"
+unselected-border-alpha = 0.35

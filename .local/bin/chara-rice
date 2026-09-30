@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+case "${1:-help}" in
+  preview-lock) exec omarchy-shell lock preview ;;
+  hide-preview) exec omarchy-shell lock hidePreview ;;
+  panel)
+    exec qs ipc -p "$HOME/.config/quickshell/bar/shell.qml" call -- chara-rice show "${2:-control}"
+    ;;
+  close-panel)
+    exec qs ipc -p "$HOME/.config/quickshell/bar/shell.qml" call -- chara-rice close
+    ;;
+  status)
+    omarchy theme current
+    exec "$HOME/.config/quickshell/bin/qs-barctl" status
+    ;;
+  *)
+    printf '%s\n' \
+      'Chara Crimson' \
+      '  chara-rice status          Check the theme and Rise bar' \
+      '  chara-rice panel <name>    Open control, workspaces, volume, calendar, battery, or brightness (V1)' \
+      '  chara-rice close-panel     Close a Rise panel' \
+      '  chara-rice preview-lock    Show a dismissible lock-screen preview' \
+      '  chara-rice hide-preview    Close the preview' \
+      '  To restore the previous setup, run ./uninstall.sh --yes from your repository clone.'
+    ;;
+esac

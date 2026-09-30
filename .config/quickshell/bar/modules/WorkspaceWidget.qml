@@ -57,7 +57,7 @@ Item {
     Row {
         id: wsRow
         anchors.centerIn: parent
-        spacing: 5
+        spacing: root.charaRice ? 4 : 5
 
         Repeater {
             model: wsWidget.workspaceList
@@ -83,7 +83,8 @@ Item {
 
                 readonly property bool isEmpty: !isFocused && !isOccupied
 
-                implicitWidth: root.workspaceStyle === "numbers" ? 22
+                implicitWidth: root.charaRice && root.workspaceStyle === "default" ? (isFocused ? 36 : 20)
+                             : root.workspaceStyle === "numbers" ? 22
                              : root.workspaceStyle === "magic"   ? (isFocused ? 20 : 18)
                              : (isFocused ? 32 : 16)
                 implicitHeight: 28
@@ -95,7 +96,7 @@ Item {
                 // ── DEFAULT style: glow + dot ──
                 // glow — alle states, nur opacity variiert
                 Rectangle {
-                    visible: root.workspaceStyle === "default"
+                    visible: root.workspaceStyle === "default" && !root.charaRice
                     anchors.centerIn: parent
                     width:  isFocused ? 34 : 16
                     height: isFocused ? 16 : 16
@@ -113,7 +114,7 @@ Item {
                 // pill / kreis
                 Rectangle {
                     id: dot
-                    visible: root.workspaceStyle === "default"
+                    visible: root.workspaceStyle === "default" && !root.charaRice
                     anchors.centerIn: parent
                     width:  isFocused  ? 26 : 8
                     height: 8
@@ -126,6 +127,33 @@ Item {
 
                     Behavior on width { NumberAnimation { duration: 200; easing.type: Easing.OutCubic } }
                     Behavior on color { ColorAnimation { duration: 200 } }
+                }
+
+                Row {
+                    visible: root.charaRice && root.workspaceStyle === "default"
+                    anchors.centerIn: parent
+                    spacing: 5
+                    PixelSoul {
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: wsCell.isFocused ? root.seal : (wsCell.isOccupied ? root.inkDeep : root.muted)
+                        opacity: wsCell.isEmpty ? 0.42 : 1
+                        filled: wsCell.isFocused
+                    }
+                    UiText {
+                        visible: wsCell.isFocused
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: wsCell.wsId
+                        color: root.ink
+                        font.family: root.pixelFont
+                        font.pixelSize: 16
+                    }
+                }
+
+                TooltipMixin {
+                    id: workspaceTip
+                    root: wsWidget.root
+                    owner: wsCell
+                    text: "Workspace " + wsCell.wsId + (wsCell.isFocused ? " · active" : (wsCell.isOccupied ? " · occupied" : " · empty"))
                 }
 
                 // ── NUMBERS style: a digit on a rounded badge (radius follows
@@ -178,8 +206,11 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
                     onClicked: root.gotoWorkspace(wsId)
-                    onEntered: wsCell.scale = 1.15
-                    onExited:  wsCell.scale = 1.0
+                    onEntered: {
+                        if (!root.charaRice) wsCell.scale = 1.15
+                        workspaceTip.show()
+                    }
+                    onExited: { wsCell.scale = 1.0; workspaceTip.hide() }
                 }
             }
         }

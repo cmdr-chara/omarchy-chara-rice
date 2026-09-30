@@ -18,6 +18,8 @@ Item {
     readonly property string currentBackgroundPath: omarchyCurrentRoot + "/background"
     readonly property string currentBackgroundsPath: omarchyCurrentRoot + "/theme/backgrounds"
     property string currentThemeName: ""
+    readonly property bool charaRice: currentThemeName === "chara-crimson"
+    readonly property string pixelFont: "Determination Mono Web"
     readonly property string userBackgroundsPath: currentThemeName === ""
         ? ""
         : Quickshell.env("HOME") + "/.config/omarchy/backgrounds/" + currentThemeName
@@ -58,7 +60,7 @@ Item {
         ink.g * 0.88 + paper.g * 0.12,
         ink.b * 0.88 + paper.b * 0.12,
         1.0)
-    property string barColor: "color05"
+    property string barColor: charaRice ? "color01" : "color05"
     readonly property bool barColorIsAccent: barColor === "accent"
     // Compatibility alias for older local code/reviews that still use the
     // previous boolean name.
@@ -127,13 +129,14 @@ Item {
     property real barOpacity:  0.94   // große Insel / Split-Sektionen
     property real pillOpacity: 0.18   // einzelne Widget-Pillen (workspace, mem, cpu, …)
 
-    readonly property color bg:     Qt.rgba(paper.r, paper.g, paper.b, barOpacity)
+    readonly property color bg:     Qt.rgba(paper.r, paper.g, paper.b, charaRice ? 0.98 : barOpacity)
     // bar island/section bg ONLY (NOT the shared bg -> panels keep their opacity): Frost
     // lowers the island alpha; compositor blur appears automatically when the theme
     // already blurs Quickshell layer surfaces.
     readonly property color barBg:  Qt.rgba(paper.r, paper.g, paper.b,
-                                            styleFrost ? Math.min(barOpacity, 0.68) : barOpacity)
-    readonly property color pill:   Qt.rgba(paper.r, paper.g, paper.b, pillOpacity)
+                                            styleFrost ? Math.min(barOpacity, 0.68) : (charaRice ? 0.97 : barOpacity))
+    readonly property color pill:   charaRice ? Qt.rgba(seal.r, seal.g, seal.b, 0.035)
+                                            : Qt.rgba(paper.r, paper.g, paper.b, pillOpacity)
     readonly property color fg:     ink
     readonly property color muted:  sumi
     readonly property color accent: seal
@@ -499,11 +502,11 @@ Item {
     property bool styleFrost:       false   // lower bar-island opacity; theme blur may show through
     property bool styleRadiusSmall: false   // radius 12 ⇄ 6
     property bool styleHeightMin:   false   // inner pill 24 ⇄ 20 (slot stays 28)
-    readonly property int   pillRadius:   styleRadiusSmall ? 6 : 12
+    readonly property int   pillRadius:   charaRice ? 2 : (styleRadiusSmall ? 6 : 12)
     readonly property int   pillH:        styleHeightMin ? 20 : 24
     readonly property int   pillBorderW:  styleBorder ? 1 : 0
-    readonly property int   islandRadius: styleRadiusSmall ? 8 : 16
-    readonly property int   tileRadius:   pillRadius - 2   // inner panel buttons: 2 less than global (10 ⇄ 4)
+    readonly property int   islandRadius: charaRice ? 3 : (styleRadiusSmall ? 8 : 16)
+    readonly property int   tileRadius:   Math.max(1, pillRadius - 2)
     // horizontal padding of the workspace pill (overhang each side, mirrored by the
     // G2 slot pad). In "numbers" the wide digit badges should nestle concentrically
     // into the pill's inner radius → pad = pillRadius - badgeRadius; else a fixed 4.
@@ -617,7 +620,7 @@ Item {
         popupOpened("aiUsageVisible")
         if (aiUsageVisible) refreshAiUsage()
     }
-    property string aiTool: "claude"   // "claude", "codex", or "opencode" — icon shown in the bar
+    property string aiTool: charaRice ? "codex" : "claude"   // "claude", "codex", or "opencode" — icon shown in the bar
 
     // ── AI usage data (single source of truth) ───────────────────
     // The bar pill (ClaudeWidget) and the AiUsagePanel both render from these —
@@ -1252,8 +1255,8 @@ Item {
 
     // ── module enable flags (controlled by ControlPanel) ──
     property bool modStatus:     true
-    property bool modMemory:     true
-    property bool modCpu:        true
+    property bool modMemory:     !charaRice
+    property bool modCpu:        !charaRice
     property bool modVolume:     true
     property bool modWeather:    true
     property bool modNetwork:    true
@@ -1629,15 +1632,15 @@ Item {
     // iwd (Omarchy 3.8.x) → impala/bluetui through omarchy-launch-*; if NetworkManager
     // is the active backend (Omarchy 4.0) → nmtui instead. Quattro removed the
     // dedicated Bluetooth launcher; prefer a retained bluetui, then bluetoothctl.
-    readonly property string launchWifiCmd: "if systemctl is-active --quiet NetworkManager 2>/dev/null; then omarchy-launch-or-focus-tui nmtui; else omarchy-launch-wifi; fi"
+    readonly property string launchWifiCmd: "if command -v nm-connection-editor >/dev/null 2>&1; then nm-connection-editor; elif systemctl is-active --quiet NetworkManager 2>/dev/null; then omarchy-launch-or-focus-tui nmtui; else omarchy-launch-wifi; fi"
     readonly property string launchBtCmd:   "exec \"$HOME/.local/bin/chara-launch-bluetooth\""
-    property bool modPower:      false   // default off (toggle in ControlPanel)
-    property bool modBluetooth:  false   // default off (toggle in ControlPanel)
-    property bool modBrightness: true
+    property bool modPower:      charaRice   // default off (toggle in ControlPanel)
+    property bool modBluetooth:  charaRice   // default off (toggle in ControlPanel)
+    property bool modBrightness: !charaRice
     property bool modMedia:      true
-    property bool modQuick:      true    // G10 group pill (idle-inhibitor · media · theme)
-    property bool modMpris:      true    // G9 now-playing / mpris pill
-    property bool modClaude:     false   // default off (toggle in ControlPanel)
+    property bool modQuick:      !charaRice    // G10 group pill (idle-inhibitor · media · theme)
+    property bool modMpris:      !charaRice    // G9 now-playing / mpris pill
+    property bool modClaude:     charaRice   // default off (toggle in ControlPanel)
 
     // Per-widget compact display modes. Defaults are full-width for backwards
     // compatibility; ControlPanel toggles persist these below.
@@ -1656,7 +1659,7 @@ Item {
     property bool hasBacklight:  false
 
     // ── workspace display mode ──
-    property string workspaceMode: "10"   // "10", "5", "active"
+    property string workspaceMode: charaRice ? "5" : "10"   // "10", "5", "active"
     // ── workspace display style (orthogonal to mode; persisted) ──
     property string workspaceStyle: "default"   // "default", "numbers", "magic"
 
@@ -2023,13 +2026,12 @@ Item {
     // Hyprland 0.55 added Lua configs but still supports classic hyprlang, and
     // BOTH ship the same version number — so the dispatch form depends on which
     // config is ACTIVE, not the version: classic wants "workspace N", Lua wants
-    // hl.dsp.focus({ workspace = N }). Probe the mode once with a harmless token:
-    // "hl.dsp" alone yields the Lua error "hl.dispatch: expected a dispatcher"
-    // under Lua, or "Invalid dispatcher" under classic — neither switches.
+    // hl.dsp.focus({ workspace = N }). Check Lua support without issuing an
+    // invalid dispatcher, which would leave a visible Hyprland config error.
     property bool hyprUsesLua: false
     Process {
         id: hyprDispatchProbe
-        command: ["bash", "-c", "hyprctl dispatch 'hl.dsp' 2>&1 | grep -qi 'hl\\.dispatch' && echo lua || echo classic"]
+        command: ["bash", "-c", "hyprctl eval 'local workspaceProbe = hl.dsp' 2>/dev/null | grep -qx 'ok' && echo lua || echo classic"]
         running: true
         stdout: StdioCollector {
             onStreamFinished: { theme.hyprUsesLua = (this.text.trim() === "lua") }
@@ -2037,7 +2039,7 @@ Item {
     }
     function gotoWorkspace(id) {
         if (hyprUsesLua)
-            Hyprland.dispatch("hl.dsp.focus({ workspace = " + id + " })")
+            Hyprland.dispatch("hl.dsp.focus({ workspace = \"" + id + "\" })")
         else
             Hyprland.dispatch("workspace " + id)
     }

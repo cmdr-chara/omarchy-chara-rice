@@ -56,6 +56,7 @@ PanelWindow {
         border.color: root.pillBorder
         border.width: root.pillBorderW
         PillShadow { theme: root }
+        PixelPanelFrame { visible: root.charaRice && root.styleBorder; accent: root.seal }
 
         x: parent ? Math.max(6, Math.min(root.trayMenuX, parent.width - width - 6)) : 6
         y: root.barPosition === "bottom" ? (parent.height - barBottom - gap - height) : (barBottom + gap)
@@ -220,7 +221,7 @@ PanelWindow {
                             anchors.verticalCenter: parent.verticalCenter
                             visible: entry.modelData.hasChildren
                             text: "›"; color: root.sumiHi
-                            font.family: root.mono; font.pixelSize: 13
+                            font.family: root.charaRice ? root.pixelFont : root.mono; font.pixelSize: root.charaRice ? 18 : 13
                         }
 
                         MouseArea {

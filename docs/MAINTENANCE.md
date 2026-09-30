@@ -49,6 +49,22 @@ Disable it without touching the rest of the rice:
 systemctl --user disable --now chara-live-wallpaper.service
 ```
 
+The performance drop-in gives the renderer lower CPU and I/O scheduling
+priority while keeping its 30 FPS limit. The service remains optional, and
+original Steam assets are never installed by this repository.
+
+## Themes and panels
+
+Chara Crimson is the current palette. Keep the browser's explicit dark
+`chromium.theme` seed when adjusting the crimson colors. OpenCode theme files
+are installed separately from CLI preferences so an update does not replace
+keybindings or other settings.
+
+Check the Apps catalog, launch a known application, and inspect the principal
+Rise V1 panels after changing the shell. `chara-rice panel <name>` opens a
+panel for inspection; `chara-rice close-panel` dismisses it. The lock preview
+commands exercise presentation without locking the session.
+
 ## Full rollback
 
 Run `./uninstall.sh --yes` from the same clone used for installation. The active

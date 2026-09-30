@@ -7,12 +7,12 @@
           "format": "dddd HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "omarchy.clock",
-          "verticalFormat": "HH\n—\nmm"
+          "verticalFormat": "HH\n\u2014\nmm"
         }
       ],
       "left": [
         {
-          "id": "omarchy.menu"
+          "id": "chara.menu"
         },
         {
           "id": "chara.workspaces"
@@ -80,13 +80,15 @@
     "omarchy.lock",
     "omarchy.media",
     "omarchy.notifications",
-    "omarchy.osd"
+    "omarchy.osd",
+    "omarchy.menu"
   ],
   "cloneSourceRestores": [
     "chara.idle",
     "chara.lock",
     "chara.media",
     "chara.notifications",
-    "chara.osd"
+    "chara.osd",
+    "chara.menu"
   ]
 }

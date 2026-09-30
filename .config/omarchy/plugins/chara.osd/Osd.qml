@@ -41,22 +41,22 @@ Item {
     return "System"
   }
   readonly property color soulColor: {
-    if (semanticText.indexOf("shutdown") >= 0 || semanticText.indexOf("error") >= 0 || semanticText.indexOf("failed") >= 0) return "#D76872"
-    if (semanticText.indexOf("power") >= 0 || semanticText.indexOf("reboot") >= 0 || semanticText.indexOf("restart") >= 0) return "#D69069"
-    if (semanticText.indexOf("capture") >= 0 || semanticText.indexOf("screenshot") >= 0) return "#7F8FCA"
-    if (semanticText.indexOf("brightness") >= 0 || semanticText.indexOf("display") >= 0) return "#D6B06C"
-    if (semanticText.indexOf("volume") >= 0 || semanticText.indexOf("audio") >= 0 || semanticText.indexOf("media") >= 0 || semanticText.indexOf("player") >= 0) return "#A686B6"
-    if (semanticText.indexOf("touch") >= 0 || semanticText.indexOf("network") >= 0 || semanticText.indexOf("bluetooth") >= 0) return "#7FAFC0"
-    if (semanticText.indexOf("keyboard") >= 0 || semanticText.indexOf("info") >= 0) return "#7F8FCA"
-    if (semanticText.indexOf("success") >= 0 || semanticText.indexOf("complete") >= 0) return "#8EAE8C"
-    return "#A45D68"
+    if (semanticText.indexOf("shutdown") >= 0 || semanticText.indexOf("error") >= 0 || semanticText.indexOf("failed") >= 0) return "#EF5261"
+    if (semanticText.indexOf("power") >= 0 || semanticText.indexOf("reboot") >= 0 || semanticText.indexOf("restart") >= 0) return "#DE9369"
+    if (semanticText.indexOf("capture") >= 0 || semanticText.indexOf("screenshot") >= 0) return "#88A9DB"
+    if (semanticText.indexOf("brightness") >= 0 || semanticText.indexOf("display") >= 0) return "#E9C079"
+    if (semanticText.indexOf("volume") >= 0 || semanticText.indexOf("audio") >= 0 || semanticText.indexOf("media") >= 0 || semanticText.indexOf("player") >= 0) return Color.accent
+    if (semanticText.indexOf("touch") >= 0 || semanticText.indexOf("network") >= 0 || semanticText.indexOf("bluetooth") >= 0) return "#7EC5C8"
+    if (semanticText.indexOf("keyboard") >= 0 || semanticText.indexOf("info") >= 0) return "#88A9DB"
+    if (semanticText.indexOf("success") >= 0 || semanticText.indexOf("complete") >= 0) return "#9BC28D"
+    return Color.accent
   }
 
   // The card is built out of measured columns instead of fixed widths, so it
   // keeps exactly `pad` between border and content on every side whatever
   // glyph or message it carries. Messages grow with their text up to
   // `maxMessageWidth` and elide beyond it.
-  readonly property color risePillBorder: "#514047"
+  readonly property color risePillBorder: Color.popups.border
   readonly property int pad: Style.space(12)
   readonly property int gap: Style.space(10)
   // A glyph next to a message reads airier than it measures: the icon outline
@@ -317,11 +317,22 @@ Item {
       anchors.horizontalCenter: parent.horizontalCenter
       anchors.bottom: parent.bottom
       anchors.bottomMargin: Style.space(67)
-      color: Util.alpha("#211416", 0.98)
+      color: Color.popups.background
       borderSpec: Border.flat(root.risePillBorder, 1)
-      radius: 14
+      radius: 2
       clip: true
       opacity: root.opened ? 1 : 0
+
+      Rectangle {
+        anchors.left: parent.left; anchors.top: parent.top
+        width: Style.space(22); height: Style.space(2)
+        color: Color.accent
+      }
+      Rectangle {
+        anchors.right: parent.right; anchors.bottom: parent.bottom
+        width: Style.space(22); height: Style.space(2)
+        color: Color.accent
+      }
 
       Row {
         id: contentRow

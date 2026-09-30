@@ -18,11 +18,12 @@ Item {
   property bool syncingPasswordText: false
   property date now: new Date()
 
-  readonly property color soulRed: "#A45D68"
-  readonly property color soulRedBright: "#D76872"
-  readonly property color ink: "#10090b"
-  readonly property color coldWhite: "#F4EFF4"
-  readonly property color mutedWhite: "#C2BAC5"
+  readonly property string pixelFont: "Determination Mono Web"
+  readonly property color soulRed: Color.accent
+  readonly property color soulRedBright: Color.urgent
+  readonly property color ink: Color.background
+  readonly property color coldWhite: Color.lock.text
+  readonly property color mutedWhite: Color.muted
   readonly property bool errorState: failureMessage.length > 0
   readonly property bool showPasswordCursor: inputEnabled && !authenticatingPassword && !errorState
   readonly property int titleSize: Math.max(24, Math.min(42, Math.round(width / 46)))
@@ -102,8 +103,8 @@ Item {
       source: wallpaper
       autoPaddingEnabled: false
       blurEnabled: root.loadBackground && wallpaper.status === Image.Ready
-      blur: 0.68
-      blurMax: 96
+      blur: 0.42
+      blurMax: 48
       blurMultiplier: 1.0
       saturation: -0.20
       contrast: 0.08
@@ -112,7 +113,7 @@ Item {
 
     Rectangle {
       anchors.fill: parent
-      color: "#b80e080a"
+      color: Util.alpha(root.ink, 0.68)
     }
 
     Rectangle {
@@ -133,17 +134,40 @@ Item {
 
     Item {
       id: savePanel
-      width: Math.min(parent.width - 72, 960)
-      height: Math.min(parent.height - 72, 650)
+      width: Math.min(parent.width - 72, 680)
+      height: Math.min(parent.height - 72, 470)
       anchors.centerIn: parent
+
+      Rectangle {
+        anchors.fill: parent
+        color: Util.alpha(root.ink, 0.95)
+        border.width: 2
+        border.color: Util.alpha(root.coldWhite, 0.32)
+        radius: 2
+        Rectangle {
+          anchors.left: parent.left
+          anchors.top: parent.top
+          width: 48
+          height: 3
+          color: root.soulRed
+        }
+        Rectangle {
+          anchors.right: parent.right
+          anchors.bottom: parent.bottom
+          width: 48
+          height: 3
+          color: root.soulRed
+        }
+      }
 
       Text {
         id: determined
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
+        anchors.topMargin: 32
         text: "*  STAY DETERMINED."
         color: root.soulRedBright
-        font.family: Style.font.family
+        font.family: root.pixelFont
         font.pixelSize: root.bodySize
         font.bold: true
         font.letterSpacing: 1.5
@@ -164,7 +188,7 @@ Item {
           Text {
             text: "Chara"
             color: root.coldWhite
-            font.family: Style.font.family
+            font.family: root.pixelFont
             font.pixelSize: root.titleSize
             font.bold: true
           }
@@ -172,7 +196,7 @@ Item {
           Text {
             text: "LV 20"
             color: root.coldWhite
-            font.family: Style.font.family
+            font.family: root.pixelFont
             font.pixelSize: root.titleSize
             font.bold: true
           }
@@ -180,7 +204,7 @@ Item {
           Text {
             text: root.timeText()
             color: root.coldWhite
-            font.family: Style.font.family
+            font.family: root.pixelFont
             font.pixelSize: root.titleSize
             font.bold: true
           }
@@ -188,9 +212,9 @@ Item {
 
         Text {
           anchors.horizontalCenter: parent.horizontalCenter
-          text: "Void — The True Path"
+          text: "* THE VOID FILLS YOU WITH DETERMINATION."
           color: root.coldWhite
-          font.family: Style.font.family
+          font.family: root.pixelFont
           font.pixelSize: root.bodySize
           font.bold: true
           font.letterSpacing: 0.8
@@ -215,15 +239,11 @@ Item {
         anchors.top: saveInfo.bottom
         anchors.topMargin: Math.max(28, parent.height * 0.075)
 
-        scale: 1.0
-        SequentialAnimation on scale {
-          running: true
-          loops: Animation.Infinite
-          NumberAnimation { to: 1.10; duration: 700; easing.type: Easing.InOutQuad }
-          NumberAnimation { to: 1.00; duration: 700; easing.type: Easing.InOutQuad }
-        }
+        opacity: root.authenticatingPassword ? 0.55 : 1
+        Behavior on opacity { NumberAnimation { duration: 150 } }
 
         Canvas {
+          id: lockSoul
           anchors.fill: parent
           onPaint: {
             var ctx = getContext("2d")
@@ -237,17 +257,21 @@ Item {
               }
             }
           }
+          Connections {
+            target: root
+            function onSoulRedBrightChanged() { lockSoul.requestPaint() }
+          }
         }
       }
 
       BorderSurface {
         id: battleBox
-        width: Math.min(savePanel.width, 580)
+        width: Math.min(savePanel.width - 64, 540)
         height: root.fieldHeight
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: soul.bottom
         anchors.topMargin: Math.max(20, parent.height * 0.045)
-        color: "#e60e080a"
+        color: Color.lock.background
         borderSpec: root.inputBorderSpec
         radius: 0
         clip: true
@@ -302,7 +326,7 @@ Item {
             : (root.failureMessage.length > 0 ? "* WRONG PASSWORD. TRY AGAIN." : "* ENTER PASSWORD")
           visible: passwordInput.text.length === 0
           color: root.errorState ? root.soulRedBright : root.coldWhite
-          font.family: Style.font.family
+          font.family: root.pixelFont
           font.pixelSize: root.bodySize
           font.bold: true
           horizontalAlignment: Text.AlignHCenter
@@ -329,7 +353,7 @@ Item {
         text: "[ENTER] CONTINUE    [ESC] CLEAR"
         color: root.mutedWhite
         opacity: 0.72
-        font.family: Style.font.family
+        font.family: root.pixelFont
         font.pixelSize: root.smallSize
         font.letterSpacing: 1.0
       }

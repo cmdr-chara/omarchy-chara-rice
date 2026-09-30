@@ -61,20 +61,19 @@ BorderSurface {
   readonly property color bodyColor: Qt.darker(Color.notifications.text, 1.15)
   readonly property string eventText: (app + " " + summary + " " + body).toLowerCase()
   readonly property color soulColor: {
-    if (urgency === 2 || eventText.indexOf("error") >= 0 || eventText.indexOf("failed") >= 0 || eventText.indexOf("critical") >= 0) return "#D76872"
-    if (eventText.indexOf("warning") >= 0 || eventText.indexOf("power") >= 0 || eventText.indexOf("reboot") >= 0) return "#D69069"
-    if (eventText.indexOf("brightness") >= 0) return "#D6B06C"
-    if (eventText.indexOf("screenshot") >= 0 || eventText.indexOf("capture") >= 0) return "#7F8FCA"
-    if (eventText.indexOf("success") >= 0 || eventText.indexOf("complete") >= 0 || eventText.indexOf("updated") >= 0 || eventText.indexOf("installed") >= 0) return "#8EAE8C"
-    if (eventText.indexOf("network") >= 0 || eventText.indexOf("wifi") >= 0 || eventText.indexOf("bluetooth") >= 0 || eventText.indexOf("touchpad") >= 0) return "#7FAFC0"
-    if (eventText.indexOf("audio") >= 0 || eventText.indexOf("volume") >= 0 || eventText.indexOf("media") >= 0 || eventText.indexOf("spotify") >= 0 || eventText.indexOf("song") >= 0) return "#A686B6"
-    if (urgency === 0) return "#7FAFC0"
-    return "#A45D68"
+    if (urgency === 2 || eventText.indexOf("error") >= 0 || eventText.indexOf("failed") >= 0 || eventText.indexOf("critical") >= 0) return "#EF5261"
+    if (eventText.indexOf("warning") >= 0 || eventText.indexOf("power") >= 0 || eventText.indexOf("reboot") >= 0) return "#DE9369"
+    if (eventText.indexOf("brightness") >= 0) return "#E9C079"
+    if (eventText.indexOf("screenshot") >= 0 || eventText.indexOf("capture") >= 0) return "#88A9DB"
+    if (eventText.indexOf("success") >= 0 || eventText.indexOf("complete") >= 0 || eventText.indexOf("updated") >= 0 || eventText.indexOf("installed") >= 0) return "#9BC28D"
+    if (eventText.indexOf("network") >= 0 || eventText.indexOf("wifi") >= 0 || eventText.indexOf("bluetooth") >= 0 || eventText.indexOf("touchpad") >= 0) return "#7EC5C8"
+    if (eventText.indexOf("audio") >= 0 || eventText.indexOf("volume") >= 0 || eventText.indexOf("media") >= 0 || eventText.indexOf("spotify") >= 0 || eventText.indexOf("song") >= 0) return "#C998CF"
+    if (urgency === 0) return "#7EC5C8"
+    return Color.accent
   }
   readonly property color accentColor: soulColor
-  // Match Rise V1 pills: a quiet neutral-plum frame. Event colours belong to
-  // the soul and countdown only; critical alerts may still strengthen it.
-  readonly property color risePillBorder: "#514047"
+  // The shared surface frame stays quiet; soul color communicates the event.
+  readonly property color risePillBorder: Color.notifications.border
   readonly property var cardBorderSpec: Border.flat(
     urgency === 2 ? Util.alpha(soulColor, 0.82) : risePillBorder,
     urgency === 2 ? Math.max(2, Style.space(2)) : 1
@@ -96,8 +95,8 @@ BorderSurface {
   // Add vertical border insets so mainColumn (inset by border on top/left/right)
   // doesn't push content under the bottom edge.
   implicitHeight: mainColumn.implicitHeight + borderTop + borderBottom
-  radius: Math.max(14, cornerRadius)
-  color: Util.alpha("#211416", 0.98)
+  radius: 2
+  color: Color.notifications.background
   borderSpec: cardBorderSpec
   clip: true
 
@@ -227,8 +226,8 @@ BorderSurface {
             Layout.fillWidth: true
             text: root.sourceLabel
             color: root.soulColor
-            font.family: root.fontFamily || Style.font.family
-            font.pixelSize: Style.font.caption
+            font.family: "Determination Mono Web"
+            font.pixelSize: 15
             font.bold: true
             font.letterSpacing: 0.8
             elide: Text.ElideRight

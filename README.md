@@ -1,7 +1,7 @@
-# Chara Crimson for Omarchy
+# Chara Determination for Omarchy
 
 A dark Omarchy 4 desktop inspired by Undertale's Chara: near-black surfaces,
-crimson `#F13B45` accents, pixel souls, and sharp battle-box frames. Rise V1
+garnet `#A45D68` accents, pixel souls, and sharp battle-box frames. Rise V2
 provides a compact three-part HUD, with matching menus, popup panels, lock
 screen, terminal tools, and an optional red OpenCode theme.
 
@@ -12,9 +12,9 @@ contains screenshots of the running desktop, credited below.
 
 ## Gallery
 
-### Rise V1 desktop
+### Rise desktop
 
-![Chara Crimson desktop with Rise V1](screenshots/desktop.png)
+![Chara Determination desktop](screenshots/desktop.png)
 
 ### Notifications and OSD
 
@@ -47,13 +47,12 @@ The Wallpaper Engine asset itself is not included in this repository.
 ## What is included
 
 - Hyprland layout, animations, bindings, idle integration, and window behavior.
-- Rise V1 as the default bar, with five pixel soul workspaces, HP battery
-  status, segmented volume, and the compatible V2 variant retained.
+- Rise V2 as the default bar, with five pixel soul workspaces, HP battery
+  status, segmented volume, and the compatible V1 variant retained.
 - Chara bar, lock screen, notifications, OSD, media, network, power, and
   workspace plugins.
 - Mirador workspace overview and Quick Look file preview.
-- Chara Crimson palette and matching dark browser color. The earlier Chara
-  Determination palette remains available as an alternative.
+- Chara Determination palette with its matching dark shell surfaces.
 - Pixel-framed Rise panels and a Chara menu that uses native application
   discovery, icons, search, and launch behavior.
 - Matching Alacritty, Foot, Ghostty, Kitty, btop, and Starship configuration.
@@ -61,6 +60,37 @@ The Wallpaper Engine asset itself is not included in this repository.
 - `lucent-chara`, a dark red copy of OpenCode's `lucent-orng` theme.
 - Safe Bluetooth helper and optional self-healing live-wallpaper service.
 - Reversible installer and uninstaller with user-state backups.
+
+## Optional Argus system monitor
+
+The public rice does not vendor third-party plugin code or install it silently.
+If you want a system-health panel that complements the Chara bar, install
+[Argus](https://github.com/diegopluna/omarchy-argus) explicitly:
+
+```bash
+omarchy plugin add https://github.com/diegopluna/omarchy-argus.git --enable --yes
+omarchy restart shell
+```
+
+The visible Rise bar already contains a small garnet eye/`ARG` bridge beside
+the network widget; no second Omarchy bar is enabled. Click it for Argus's full
+CPU, RAM, temperature, GPU, disk, network, power, history, and opt-in alert
+panel. Chara's network, HP battery, and power widgets remain the owners of
+those bar controls. Keep alert commands empty unless an outbound notification
+hook is intentional; the panel and history remain local by default.
+
+Remove the optional integration with:
+
+```bash
+omarchy plugin remove io.github.diegopluna.argus --yes
+```
+
+The live integration was checked with Argus `1.2.3` at revision
+`0625ce06af4f43b3c504617d0f6ee7268ec6e6a6` on Omarchy `4.0.4-1` and Hyprland
+`0.56.2`. It is intentionally separate from the portable installer so a rice
+install never fetches or executes external plugin code without an explicit
+choice. See [third-party notices](THIRD_PARTY_NOTICES.md) and
+[maintenance notes](docs/MAINTENANCE.md).
 
 ## Compatibility
 
@@ -80,8 +110,8 @@ cd omarchy-chara-rice
 ```
 
 The installer backs up every overwritten user file under
-`~/.local/state/omarchy-chara-rice/backups/`, installs Rise V1, applies the
-Chara Crimson palette, reloads Hyprland, and restarts the Omarchy shell. It does not
+`~/.local/state/omarchy-chara-rice/backups/`, installs Rise V2, applies the
+Chara Determination palette, reloads Hyprland, and restarts the Omarchy shell. It does not
 replace the current wallpaper.
 
 Quick Look's D-Bus Space-key bridge and optional Nautilus context-menu file are
@@ -160,7 +190,7 @@ detection. No Workshop content is stored in this repository.
 
 ### HUD preferences and previews
 
-Fresh Rise V1 settings use the compact Chara HUD. Existing Rise widget,
+Fresh Rise V2 settings use the compact Chara HUD. Existing Rise widget,
 color, and layout preferences remain authoritative. Use its Control panel
 to adjust them.
 
@@ -173,7 +203,7 @@ chara-rice preview-lock
 chara-rice hide-preview
 ```
 
-Panel shortcuts target Rise V1. Lock preview is dismissible and leaves the
+Panel shortcuts target the active Rise variant. Lock preview is dismissible and leaves the
 normal authentication flow intact.
 
 ## Key shortcuts

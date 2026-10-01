@@ -18,7 +18,7 @@ Item {
     readonly property string currentBackgroundPath: omarchyCurrentRoot + "/background"
     readonly property string currentBackgroundsPath: omarchyCurrentRoot + "/theme/backgrounds"
     property string currentThemeName: ""
-    readonly property bool charaRice: currentThemeName === "chara-crimson"
+    readonly property bool charaRice: currentThemeName === "chara-determination"
     readonly property string pixelFont: "Determination Mono Web"
     readonly property string userBackgroundsPath: currentThemeName === ""
         ? ""
@@ -679,6 +679,10 @@ Item {
     // F15: clamp an external 0..1 utilization to a 0–100 int (a negative/over-range value would
     // otherwise produce wrong text and negative/overwide usage bars)
     function aiPct(v) { return Math.max(0, Math.min(100, Math.round((parseFloat(v) || 0) * 100))) }
+    function aiRemainingPct(v) {
+        if (v === undefined || v === null || String(v) === "") return 0
+        return 100 - theme.aiPct(v)
+    }
 
     function aiWindowLabel(minutes) {
         if (minutes === 300) return "5h"
@@ -710,7 +714,7 @@ Item {
             kind: String(w.kind || ""),
             minutes: minutes,
             label: String(w.label || theme.aiWindowLabel(minutes)),
-            pct: theme.aiPct(w.utilization),
+            pct: theme.aiRemainingPct(w.utilization),
             resetTs: parseInt(w.reset) || 0
         }
     }
@@ -730,9 +734,9 @@ Item {
         var has5 = d["5h-utilization"] !== undefined && String(d["5h-utilization"]) !== ""
         var has7 = d["7d-utilization"] !== undefined && String(d["7d-utilization"]) !== ""
         if (has5 || parseInt(d["5h-reset"]) > 0)
-            out.push({ kind: "primary", minutes: 300, label: "5h", pct: theme.aiPct(d["5h-utilization"]), resetTs: parseInt(d["5h-reset"]) || 0 })
+            out.push({ kind: "primary", minutes: 300, label: "5h", pct: theme.aiRemainingPct(d["5h-utilization"]), resetTs: parseInt(d["5h-reset"]) || 0 })
         if (has7 || parseInt(d["7d-reset"]) > 0)
-            out.push({ kind: "secondary", minutes: 10080, label: "Weekly", pct: theme.aiPct(d["7d-utilization"]), resetTs: parseInt(d["7d-reset"]) || 0 })
+            out.push({ kind: "secondary", minutes: 10080, label: "Weekly", pct: theme.aiRemainingPct(d["7d-utilization"]), resetTs: parseInt(d["7d-reset"]) || 0 })
         return out
     }
 
@@ -807,7 +811,7 @@ Item {
             }
             if (w.minutes === 300) { theme.aiCxPct5h = w.pct; theme.aiCxReset5hTs = w.resetTs }
             else if (w.minutes === 10080) { theme.aiCxPct7d = w.pct; theme.aiCxReset7dTs = w.resetTs }
-            if (w.pct > theme.aiCxQuotaPct) {
+            if (i === 0 || w.pct < theme.aiCxQuotaPct) {
                 theme.aiCxQuotaPct = w.pct
                 theme.aiCxQuotaLabel = String(general.label || "Codex") + " " + String(w.label || "window")
             }
@@ -868,7 +872,8 @@ Item {
                 var minutes = lower.indexOf("weekly") >= 0 || lower.indexOf("7-day") >= 0 ? 10080 : 0
                 var hourMatch = lower.match(/([0-9]+)h/)
                 if (minutes === 0 && hourMatch) minutes = parseInt(hourMatch[1]) * 60
-                var pct = Math.max(0, Math.min(100, Math.round((parseFloat(limit.percent) || 0) * 100)))
+                var rawPercent = parseFloat(limit.percent)
+                var pct = isNaN(rawPercent) ? 0 : 100 - Math.max(0, Math.min(100, Math.round(rawPercent * 100)))
                 var resetMs = Date.parse(String(limit.resetsAt || ""))
                 var resetTs = isNaN(resetMs) ? 0 : Math.round(resetMs / 1000)
                 windows.push({ kind: i === 0 ? "primary" : "secondary", minutes: minutes, label: label, pct: pct, resetTs: resetTs })
@@ -881,6 +886,12 @@ Item {
             theme.aiCxPrimaryResetTs = windows[0].resetTs
             theme.aiCxQuotaPct = windows[0].pct
             theme.aiCxQuotaLabel = windows[0].label
+            for (var q = 1; q < windows.length; q++) {
+                if (windows[q].pct < theme.aiCxQuotaPct) {
+                    theme.aiCxQuotaPct = windows[q].pct
+                    theme.aiCxQuotaLabel = windows[q].label
+                }
+            }
         }
         if (d.ready === true && (today > 0 || totalPrompts > 0 || totalSessions > 0)) {
             theme.aiCxHas = true

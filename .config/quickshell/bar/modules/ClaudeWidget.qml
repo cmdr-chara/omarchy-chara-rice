@@ -111,7 +111,7 @@ Item {
             for (var i = 0; i < cxWindows.length; i++) {
                 var xw = cxWindows[i] || {}
                 var xr = root.aiFmtReset(xw.resetTs || 0)
-                lines.push(String(xw.label || "window") + ": " + (xw.pct || 0) + "%" + (xr ? "  (reset in " + xr + ")" : ""))
+                lines.push(String(xw.label || "window") + ": " + (xw.pct || 0) + "% left" + (xr ? "  (reset in " + xr + ")" : ""))
             }
             if (cxWindows.length === 0) lines.push("quota: not reported by Codex RPC")
             if (cxLimitStatus) lines.push("General limit: " + root.aiCodexStatusLabel(cxLimitStatus, cxLimitReachedType))
@@ -284,7 +284,7 @@ Item {
             text: rootMod.blocked
                 ? "BLK"
                 : (rootMod.selSignal
-                    ? (rootMod.isCodex && rootMod.pct5h <= 0 && rootMod.cxToday > 0
+                    ? (rootMod.isCodex && rootMod.cxWindows.length === 0 && rootMod.cxToday > 0
                         ? root.aiCompactTokens(rootMod.cxToday)
                         : String(rootMod.pct5h).padStart(2, "0") + "%")
                     : "··")

@@ -18,6 +18,7 @@ PanelWindow {
     exclusionMode: ExclusionMode.Ignore
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.namespace: "omarchy-ai-usage"
+    WlrLayershell.focusable: aiPanel.visible
 
     readonly property int barBottom: root.v2BarHeight
     readonly property int gap: 6
@@ -42,6 +43,13 @@ PanelWindow {
     readonly property string cxTokens:    root.aiCxTokens
     readonly property string cxRate:      root.aiCxRate
     readonly property int    cxToday:     root.aiCxToday
+    readonly property int    cxTodayPrompts: root.aiCxTodayPrompts
+    readonly property int    cxTodaySessions: root.aiCxTodaySessions
+    readonly property int    cxTotalPrompts: root.aiCxTotalPrompts
+    readonly property int    cxTotalSessions: root.aiCxTotalSessions
+    readonly property int    cxActiveDays: root.aiCxActiveDays
+    readonly property double cxLifetimeTokens: root.aiCxLifetimeTokens
+    readonly property string cxUsageStatusText: root.aiCxUsageStatusText
     readonly property bool   cxFresh:     root.aiCxFresh
     readonly property bool   cxHas:       root.aiCxHas
     readonly property var    cxWindows:   root.aiCxWindows || []
@@ -76,6 +84,7 @@ PanelWindow {
 
     MouseArea {
         anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
         onClicked: root.aiUsageVisible = false
     }
 
@@ -84,6 +93,8 @@ PanelWindow {
         property string label: ""
         property int pct: 0
         property bool dim: false
+        property bool remaining: false
+        property string valueSuffix: ""
         width: parent ? parent.width : 0
         height: 16
         UiText {
@@ -95,7 +106,7 @@ PanelWindow {
         UiText {
             id: rowVal
             anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter
-            text: pct + "%"
+            text: pct + "%" + valueSuffix
             color: dim ? aiPanel.root.sumi : aiPanel.root.seal
             font.family: aiPanel.root.mono; font.pixelSize: 11; font.weight: Font.Medium
         }
@@ -108,7 +119,7 @@ PanelWindow {
             Rectangle {
                 width: parent.width * Math.min(100, parent ? pct : 0) / 100
                 height: parent.height; radius: 4
-                color: pct >= 90 ? aiPanel.root.sealRaw : aiPanel.root.seal
+                color: (remaining ? pct <= 10 : pct >= 90) ? aiPanel.root.sealRaw : aiPanel.root.seal
                 Behavior on width { NumberAnimation { duration: 300 } }
             }
         }
@@ -217,7 +228,12 @@ PanelWindow {
             }
         }
 
-        MouseArea { anchors.fill: parent; onClicked: {} }
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            preventStealing: true
+            onClicked: {}
+        }
 
         Flickable {
             id: scroller
@@ -356,13 +372,20 @@ PanelWindow {
                     text: "no data — run codex"
                     color: root.sumiHi; font.family: root.mono; font.pixelSize: 11
                 }
-                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; label: aiPanel.cxWin0 ? aiPanel.cxWin0.label : ""; pct: aiPanel.cxWin0 ? aiPanel.cxWin0.pct : 0; dim: !aiPanel.cxFresh }
-                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; label: aiPanel.cxWin1 ? aiPanel.cxWin1.label : ""; pct: aiPanel.cxWin1 ? aiPanel.cxWin1.pct : 0; dim: !aiPanel.cxFresh }
+                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; label: aiPanel.cxWin0 ? aiPanel.cxWin0.label : ""; pct: aiPanel.cxWin0 ? aiPanel.cxWin0.pct : 0; dim: !aiPanel.cxFresh; remaining: true; valueSuffix: " left" }
+                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; label: aiPanel.cxWin1 ? aiPanel.cxWin1.label : ""; pct: aiPanel.cxWin1 ? aiPanel.cxWin1.pct : 0; dim: !aiPanel.cxFresh; remaining: true; valueSuffix: " left" }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; k: (aiPanel.cxWin0 ? aiPanel.cxWin0.label : "") + " resets in"; v: root.aiFmtResetDetail(aiPanel.cxWin0 ? aiPanel.cxWin0.resetTs : 0) || "—" }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; k: (aiPanel.cxWin1 ? aiPanel.cxWin1.label : "") + " resets in"; v: root.aiFmtResetDetail(aiPanel.cxWin1 ? aiPanel.cxWin1.resetTs : 0) || "—" }
-                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas; k: "General limit"; v: root.aiCodexStatusLabel(aiPanel.cxLimitStatus, aiPanel.cxLimitReachedType) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxLimitStatus !== ""; k: "General limit"; v: root.aiCodexStatusLabel(aiPanel.cxLimitStatus, aiPanel.cxLimitReachedType) }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxRate !== "";   k: "Local activity (1h, incl. cached)"; v: aiPanel.cxRate }
-                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxToday > 0; k: "Today"; v: (aiPanel.cxToday / 1e6).toFixed(2) + "M tok" }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxToday > 0; k: "Tokens today (incl. cached)"; v: root.aiCompactTokens(aiPanel.cxToday) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxTodayPrompts > 0; k: "Prompts today"; v: String(aiPanel.cxTodayPrompts) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxTodaySessions > 0; k: "Sessions today"; v: String(aiPanel.cxTodaySessions) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxLifetimeTokens > 0; k: "All-time tokens (incl. cached)"; v: root.aiCompactTokens(aiPanel.cxLifetimeTokens) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxTotalPrompts > 0; k: "All-time prompts"; v: String(aiPanel.cxTotalPrompts) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxTotalSessions > 0; k: "All-time sessions"; v: String(aiPanel.cxTotalSessions) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxActiveDays > 0; k: "Tracked days"; v: String(aiPanel.cxActiveDays) }
+                DetailRow { visible: aiPanel.showCodex && aiPanel.cxHas && aiPanel.cxUsageStatusText !== ""; k: "Limits"; v: aiPanel.cxUsageStatusText }
 
                 Rectangle { visible: false; width: parent.width; height: 1; color: root.sep }
 

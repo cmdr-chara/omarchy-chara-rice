@@ -47,9 +47,9 @@ PanelWindow {
     }
     implicitHeight: barSlot.screen ? barSlot.screen.height : 1440
     exclusionMode: ExclusionMode.Normal
-    // Keep the same compositor reservation for every shell style: clients must
-    // never slide behind a content-width Fit/Dock/Notch bar.
-    exclusiveZone: barSlot.root.v2BarHeight + 3
+    // Reserve exactly the visible strip so clients begin directly beneath the
+    // bar; the surface shadow is overlay-only and does not need a spacer row.
+    exclusiveZone: barSlot.root.v2BarHeight
     mask: Region {
         x: barSlot.root.barUnlocked ? 0 : Math.round(continuousBarSurface.x)
         y: barSlot.root.barUnlocked ? 0
@@ -1186,7 +1186,7 @@ PanelWindow {
                 id: qcRow
                 anchors.verticalCenter: parent.verticalCenter
                 x: Math.round((parent.width - width) / 2)
-                spacing: barSlot.root.v2IconClusterSpacing
+                spacing: barSlot.root.v2WidgetSpacing
                 IdleInhibitorWidget { root: barSlot.root; anchors.verticalCenter: parent.verticalCenter }
                 MediaBrowserWidget  { root: barSlot.root; screen: barSlot.screen; anchors.verticalCenter: parent.verticalCenter }
                 ThemeDisplayWidget  { root: barSlot.root; screen: barSlot.screen; anchors.verticalCenter: parent.verticalCenter }
@@ -1195,10 +1195,28 @@ PanelWindow {
     }
     Component {
         id: compNetwork
-        NetworkWidget {
-            root: barSlot.root
+        Item {
             readonly property real barContentLeftInset: 9
             readonly property real barContentRightInset: 9
+            implicitWidth: network.implicitWidth + argus.implicitWidth
+                + (network.implicitWidth > 0 && argus.implicitWidth > 0 ? 6 : 0)
+            implicitHeight: 28
+
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: barSlot.root.v2IconClusterSpacing
+                NetworkWidget {
+                    id: network
+                    root: barSlot.root
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                ArgusWidget {
+                    id: argus
+                    root: barSlot.root
+                    badgeOnly: true
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
         }
     }
     Component {
@@ -1252,7 +1270,7 @@ PanelWindow {
         property alias rep: repeater
         readonly property int extraCount: rmodel ? barSlot.extraSlotCount(rmodel, baseCount) : 0
         spacing: barSlot.root.v2WidgetSpacing
-        height: 32
+        height: 28
         // index of the LAST currently shown slot (skips disabled and auto-hidden
         // narrow-stage widgets) — a separator only makes sense BEFORE this gap.
         readonly property int lastVisibleIndex: {
@@ -1320,7 +1338,7 @@ PanelWindow {
                     || (occupied && island.groupVisibleAtStage(slot.gid, island.narrowStage))
                 onBudgetSlotWidthChanged: island.scheduleNarrowUpdate()
                 width: autoShown ? naturalSlotWidth : 0
-                height: 32
+                height: 28
                 visible: placeholderShown || (hasContent && (autoShown || width > 0.5))
                 opacity: autoShown ? 1 : 0
                 Behavior on opacity { NumberAnimation { duration: 140; easing.type: Easing.OutCubic } }
@@ -1374,7 +1392,7 @@ PanelWindow {
                     width: Math.round(ldr.implicitWidth)
                     // Keep every optional fill/border surface slightly inset from
                     // the bar edges so all widget treatments share one geometry.
-                    height: 24
+                    height: 22
                     radius: barSlot.root.panelButtonRadius
                     clip: true
                     visible: slot.occupied && slot.hasContent && slot.autoShown
@@ -1723,7 +1741,8 @@ PanelWindow {
                 // ── separator toggle for the gap AFTER this slot (hover-revealed,
                 //    V1 split-point pattern — click sets/clears the thin divider) ──
                 Item {
-                    visible: slot.autoShown && slot.hasContent && slot.index < slotRow.lastVisibleIndex
+                    visible: barSlot.root.barUnlocked
+                        && slot.autoShown && slot.hasContent && slot.index < slotRow.lastVisibleIndex
                     width: 14
                     height: slot.height
                     // The active handle sits exactly over the rendered divider.
@@ -1745,6 +1764,7 @@ PanelWindow {
                     MouseArea {
                         id: sepMa
                         anchors.fill: parent
+                        enabled: barSlot.root.barUnlocked
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
                         onClicked: barSlot.root.toggleSep(slot.gid)

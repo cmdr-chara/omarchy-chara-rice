@@ -10,8 +10,7 @@ required=(
   .config/hypr/hyprland.lua
   .config/omarchy/shell.json
   .config/quickshell/bar/shell.qml
-  .config/omarchy/themes/chara-crimson/colors.toml
-  .config/omarchy/themes/chara-crimson/chromium.theme
+  .config/omarchy/themes/chara-determination/colors.toml
   .config/quickshell/bar/modules/PixelPanelFrame.qml
   .config/omarchy/plugins/chara.menu/Menu.qml
   .config/opencode/themes/lucent-chara.json

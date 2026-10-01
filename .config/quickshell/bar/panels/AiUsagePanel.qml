@@ -97,6 +97,8 @@ PanelWindow {
         property string label: ""
         property int pct: 0
         property bool dim: false
+        property bool remaining: false
+        property string valueSuffix: ""
         width: parent ? parent.width : 0
         height: 16
         UiText {
@@ -108,7 +110,7 @@ PanelWindow {
         UiText {
             id: rowVal
             anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter
-            text: pct + "%"
+            text: pct + "%" + valueSuffix
             color: dim ? aiPanel.root.sumi : aiPanel.root.seal
             font.family: aiPanel.root.mono; font.pixelSize: 11; font.weight: Font.Medium
         }
@@ -121,7 +123,7 @@ PanelWindow {
             Rectangle {
                 width: parent.width * Math.min(100, parent ? pct : 0) / 100
                 height: parent.height; radius: 4
-                color: pct >= 90 ? aiPanel.root.sealRaw : aiPanel.root.seal
+                color: (remaining ? pct <= 10 : pct >= 90) ? aiPanel.root.sealRaw : aiPanel.root.seal
                 Behavior on width { NumberAnimation { duration: 300 } }
             }
         }
@@ -362,8 +364,8 @@ PanelWindow {
                     text: "no data — run codex"
                     color: root.sumiHi; font.family: root.mono; font.pixelSize: 11
                 }
-                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; label: aiPanel.cxWin0 ? aiPanel.cxWin0.label : ""; pct: aiPanel.cxWin0 ? aiPanel.cxWin0.pct : 0; dim: !aiPanel.cxFresh }
-                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; label: aiPanel.cxWin1 ? aiPanel.cxWin1.label : ""; pct: aiPanel.cxWin1 ? aiPanel.cxWin1.pct : 0; dim: !aiPanel.cxFresh }
+                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; label: aiPanel.cxWin0 ? aiPanel.cxWin0.label : ""; pct: aiPanel.cxWin0 ? aiPanel.cxWin0.pct : 0; dim: !aiPanel.cxFresh; remaining: true; valueSuffix: " left" }
+                UsageRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; label: aiPanel.cxWin1 ? aiPanel.cxWin1.label : ""; pct: aiPanel.cxWin1 ? aiPanel.cxWin1.pct : 0; dim: !aiPanel.cxFresh; remaining: true; valueSuffix: " left" }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxWin0 !== null; k: (aiPanel.cxWin0 ? aiPanel.cxWin0.label : "") + " resets in"; v: root.aiFmtResetDetail(aiPanel.cxWin0 ? aiPanel.cxWin0.resetTs : 0) || "—" }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxWin1 !== null; k: (aiPanel.cxWin1 ? aiPanel.cxWin1.label : "") + " resets in"; v: root.aiFmtResetDetail(aiPanel.cxWin1 ? aiPanel.cxWin1.resetTs : 0) || "—" }
                 DetailRow { visible: aiPanel.showCodex && aiPanel.cxLimitStatus !== ""; k: "General limit"; v: root.aiCodexStatusLabel(aiPanel.cxLimitStatus, aiPanel.cxLimitReachedType) }

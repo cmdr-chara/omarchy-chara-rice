@@ -477,7 +477,30 @@ PanelWindow {
             }
         }
     }
-    Component { id: compNetwork;    NetworkWidget      { root: barSlot.root } }
+    Component {
+        id: compNetwork
+        Item {
+            implicitWidth: network.implicitWidth + argus.implicitWidth
+                + (network.implicitWidth > 0 && argus.implicitWidth > 0 ? 6 : 0)
+            implicitHeight: 28
+
+            Row {
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 6
+                NetworkWidget {
+                    id: network
+                    root: barSlot.root
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+                ArgusWidget {
+                    id: argus
+                    root: barSlot.root
+                    standaloneSurface: true
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+            }
+        }
+    }
     Component { id: compPower;      PowerProfileWidget { root: barSlot.root } }
     Component { id: compBattery;    BatteryWidget      { root: barSlot.root } }
     Component { id: compBrightness; BrightnessWidget   { root: barSlot.root } }

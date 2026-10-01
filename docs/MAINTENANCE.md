@@ -55,15 +55,35 @@ original Steam assets are never installed by this repository.
 
 ## Themes and panels
 
-Chara Crimson is the current palette. Keep the browser's explicit dark
-`chromium.theme` seed when adjusting the crimson colors. OpenCode theme files
+Chara Determination is the current palette. Keep the browser's explicit dark
+`chromium.theme` seed when adjusting the Chara colors. OpenCode theme files
 are installed separately from CLI preferences so an update does not replace
 keybindings or other settings.
 
 Check the Apps catalog, launch a known application, and inspect the principal
-Rise V1 panels after changing the shell. `chara-rice panel <name>` opens a
+Rise V2 panels after changing the shell. `chara-rice panel <name>` opens a
 panel for inspection; `chara-rice close-panel` dismisses it. The lock preview
 commands exercise presentation without locking the session.
+
+## Optional Argus integration
+
+Argus is an external, opt-in system monitor. It is not copied by the portable
+installer, so updating the rice does not change its code or history. Inspect
+the upstream release before updating the live plugin:
+
+```bash
+omarchy plugin update io.github.diegopluna.argus
+omarchy plugin validate ~/.config/omarchy/plugins/io.github.diegopluna.argus
+```
+
+Argus keeps its flight-recorder data under
+`~/.local/state/argus/`. Its alert hook is empty by default; review any
+configured `alertCommand` before enabling it because that command can send
+system information outside the machine. Remove the integration with:
+
+```bash
+omarchy plugin remove io.github.diegopluna.argus --yes
+```
 
 ## Full rollback
 

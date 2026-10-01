@@ -1,4 +1,4 @@
--- Chara Crimson: crisp edges, generous spacing, responsive motion.
+-- Chara Determination: crisp edges, generous spacing, responsive motion.
 -- Theme colors still come from Omarchy's generated current/theme/hyprland.lua.
 
 hl.config({

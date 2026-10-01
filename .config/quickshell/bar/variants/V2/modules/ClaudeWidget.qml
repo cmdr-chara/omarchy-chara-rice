@@ -47,12 +47,18 @@ Item {
     readonly property int    cxReset5hTs: root.aiCxReset5hTs
     readonly property int    cxReset7dTs: root.aiCxReset7dTs
     readonly property bool   cxHas:       root.aiCxHas
+    readonly property int    cxTodayPrompts: root.aiCxTodayPrompts
+    readonly property int    cxTodaySessions: root.aiCxTodaySessions
+    readonly property int    cxTotalPrompts: root.aiCxTotalPrompts
+    readonly property int    cxTotalSessions: root.aiCxTotalSessions
+    readonly property double cxLifetimeTokens: root.aiCxLifetimeTokens
     readonly property var    cxBuckets:   root.aiCxBuckets || []
     readonly property var    cxWindows:   root.aiCxWindows || []
     readonly property string cxLimitStatus: root.aiCxLimitStatus
     readonly property string cxLimitReachedType: root.aiCxLimitReachedType
     readonly property int    cxPrimaryPct: root.aiCxPrimaryPct
     readonly property string cxPrimaryLabel: root.aiCxPrimaryLabel
+    readonly property int    cxToday: root.aiCxToday
     readonly property bool   cxHasGeneral5h: {
         for (var i = 0; i < cxWindows.length; i++) {
             if ((cxWindows[i] || {}).minutes === 300) return true
@@ -74,7 +80,7 @@ Item {
 
     // ── per-tool signal (active OR fresh non-zero usage) ──
     readonly property bool clSignal: clActive || (clPct5h > 0 && clFresh)
-    readonly property bool cxSignal: cxActive || (cxPrimaryPct > 0 && cxFresh)
+    readonly property bool cxSignal: cxActive || ((cxPrimaryPct > 0 || cxToday > 0 || cxHas) && cxFresh)
     readonly property bool ocSignal: ocActive || ((ocPct5h > 0 || ocToday > 0) && ocFresh)
 
     // ── selected-tool display values ──
@@ -106,11 +112,13 @@ Item {
             for (var i = 0; i < cxWindows.length; i++) {
                 var xw = cxWindows[i] || {}
                 var xr = root.aiFmtReset(xw.resetTs || 0)
-                lines.push(String(xw.label || "window") + ": " + (xw.pct || 0) + "%" + (xr ? "  (reset in " + xr + ")" : ""))
+                lines.push(String(xw.label || "window") + ": " + (xw.pct || 0) + "% left" + (xr ? "  (reset in " + xr + ")" : ""))
             }
-            if (!cxHasGeneral5h) lines.push("5h: not reported by Codex RPC")
-            lines.push("General limit: " + root.aiCodexStatusLabel(cxLimitStatus, cxLimitReachedType))
+            if (cxWindows.length === 0) lines.push("quota: not reported by Codex RPC")
+            if (cxLimitStatus) lines.push("General limit: " + root.aiCodexStatusLabel(cxLimitStatus, cxLimitReachedType))
             if (cxRate) lines.push("Local activity (1h, incl. cached): " + cxRate)
+            if (cxToday > 0) lines.push("today: " + root.aiCompactTokens(cxToday) + " tok  ·  " + cxTodayPrompts + " prompts  ·  " + cxTodaySessions + " sessions")
+            if (cxLifetimeTokens > 0) lines.push("all-time: " + root.aiCompactTokens(cxLifetimeTokens) + " tok  ·  " + cxTotalPrompts + " prompts  ·  " + cxTotalSessions + " sessions")
         }
         if (ocHas || ocActive) {
             if (lines.length) lines.push("")
@@ -266,7 +274,11 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: rootMod.blocked
                 ? "BLK"
-                : (rootMod.selSignal ? String(rootMod.pct5h).padStart(2, "0") + "%" : "··")
+                : (rootMod.selSignal
+                    ? (rootMod.isCodex && rootMod.cxWindows.length === 0 && rootMod.cxToday > 0
+                        ? root.aiCompactTokens(rootMod.cxToday)
+                        : String(rootMod.pct5h).padStart(2, "0") + "%")
+                    : "··")
             color: rootMod.contentColor
             font.family: root.mono
             font.pixelSize: 12

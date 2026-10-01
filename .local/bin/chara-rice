@@ -16,7 +16,7 @@ case "${1:-help}" in
     ;;
   *)
     printf '%s\n' \
-      'Chara Crimson' \
+      'Chara Determination' \
       '  chara-rice status          Check the theme and Rise bar' \
       '  chara-rice panel <name>    Open control, workspaces, volume, calendar, battery, or brightness (V1)' \
       '  chara-rice close-panel     Close a Rise panel' \

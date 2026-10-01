@@ -97,7 +97,7 @@ install -m 0644 \
 printf '%s\n' "$backup_dir" > "$state_root/installed-backup"
 
 mkdir -p "$HOME/.local/state/quickshell-rise"
-printf 'v1\n' > "$HOME/.local/state/quickshell-rise/active-variant"
+printf 'v2\n' > "$HOME/.local/state/quickshell-rise/active-variant"
 
 systemctl --user daemon-reload
 if [[ $enable_live_wallpaper == true ]]; then
@@ -108,7 +108,7 @@ if [[ $enable_live_wallpaper == true ]]; then
   fi
 fi
 
-OMARCHY_THEME_SKIP_BACKGROUND=1 omarchy theme set 'Chara Crimson'
+OMARCHY_THEME_SKIP_BACKGROUND=1 omarchy theme set 'Chara Determination'
 hyprctl reload >/dev/null
 if [[ -n $(hyprctl configerrors) ]]; then
   printf 'Hyprland reported configuration errors after installation.\n' >&2

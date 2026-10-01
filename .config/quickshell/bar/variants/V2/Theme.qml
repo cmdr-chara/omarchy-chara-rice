@@ -110,12 +110,13 @@ Item {
     readonly property string mono:  "JetBrainsMono Nerd Font"
 
     // ── transparency knobs (0.0 = fully transparent, 1.0 = opaque) ──
-    property real barOpacity:  0.94   // durchgehende V2-Leiste
+    property real barOpacity:  0.80   // durchgehende V2-Leiste
     property real pillOpacity: 0.18   // einzelne Widget-Pillen (workspace, mem, cpu, …)
 
     readonly property real surfaceOpacity: barOpacity
     readonly property color bg:     Qt.rgba(paper.r, paper.g, paper.b, surfaceOpacity)
     readonly property color barBg:  Qt.rgba(paper.r, paper.g, paper.b, surfaceOpacity)
+    readonly property color panelBg: Qt.rgba(paper.r, paper.g, paper.b, 0.97)
     readonly property color pill:   Qt.rgba(paper.r, paper.g, paper.b, pillOpacity)
     readonly property color fg:     ink
     readonly property color muted:  sumi
@@ -475,7 +476,7 @@ Item {
     // screen-facing edge and a shadow cast away from that edge. Keeping these
     // separate from the pill recipe lets widgets and panels retain their
     // established hierarchy.
-    readonly property int v2BarHeight: 33
+    readonly property int v2BarHeight: 29
     readonly property int v2NotchFrameThickness: 6
     readonly property int v2NotchFrameRadius: 14
     // Horizontal rhythm for the bar. Closely related icon buttons use the
@@ -484,7 +485,7 @@ Item {
     // wide, yielding a calm 24px centre-to-centre pitch inside icon clusters.
     readonly property int v2IconClusterSpacing: 2
     readonly property int v2InlineSpacing: 4
-    readonly property int v2WidgetSpacing: 6
+    readonly property int v2WidgetSpacing: 4
     readonly property int v2SectionSpacing: 8
     readonly property int v2ActionIconCellWidth: 22
     readonly property int v2IconGroupPadding: 5
@@ -634,7 +635,7 @@ Item {
         popupOpened("aiUsageVisible")
         if (aiUsageVisible) refreshAiUsage()
     }
-    property string aiTool: "claude"   // "claude", "codex", or "opencode" — icon shown in the bar
+    property string aiTool: "codex"    // "claude", "codex", or "opencode" — icon shown in the bar
 
     // ── AI usage data (single source of truth) ───────────────────
     // The bar pill (ClaudeWidget) and the AiUsagePanel both render from these —
@@ -661,6 +662,13 @@ Item {
     property int    aiCxReset5hTs: 0
     property int    aiCxReset7dTs: 0
     property int    aiCxToday: 0
+    property int    aiCxTodayPrompts: 0
+    property int    aiCxTodaySessions: 0
+    property int    aiCxTotalPrompts: 0
+    property int    aiCxTotalSessions: 0
+    property int    aiCxActiveDays: 0
+    property double aiCxLifetimeTokens: 0
+    property string aiCxUsageStatusText: ""
     property var    aiCxBuckets: []
     property var    aiCxWindows: []
     property int    aiCxPrimaryPct: 0
@@ -686,6 +694,10 @@ Item {
     // F15: clamp an external 0..1 utilization to a 0–100 int (a negative/over-range value would
     // otherwise produce wrong text and negative/overwide usage bars)
     function aiPct(v) { return Math.max(0, Math.min(100, Math.round((parseFloat(v) || 0) * 100))) }
+    function aiRemainingPct(v) {
+        if (v === undefined || v === null || String(v) === "") return 0
+        return 100 - theme.aiPct(v)
+    }
 
     function aiWindowLabel(minutes) {
         if (minutes === 300) return "5h"
@@ -699,6 +711,9 @@ Item {
         aiCxHas = false; aiCxFresh = false
         aiCxPct5h = 0; aiCxPct7d = 0
         aiCxPlan = ""; aiCxTokens = ""; aiCxRate = ""; aiCxToday = 0
+        aiCxTodayPrompts = 0; aiCxTodaySessions = 0
+        aiCxTotalPrompts = 0; aiCxTotalSessions = 0; aiCxActiveDays = 0
+        aiCxLifetimeTokens = 0; aiCxUsageStatusText = ""
         aiCxReset5hTs = 0; aiCxReset7dTs = 0
         aiCxBuckets = []; aiCxWindows = []
         aiCxPrimaryPct = 0; aiCxPrimaryLabel = ""; aiCxPrimaryResetTs = 0
@@ -713,7 +728,7 @@ Item {
             kind: String(w.kind || ""),
             minutes: minutes,
             label: String(w.label || theme.aiWindowLabel(minutes)),
-            pct: theme.aiPct(w.utilization),
+            pct: theme.aiRemainingPct(w.utilization),
             resetTs: parseInt(w.reset) || 0
         }
     }
@@ -733,9 +748,9 @@ Item {
         var has5 = d["5h-utilization"] !== undefined && String(d["5h-utilization"]) !== ""
         var has7 = d["7d-utilization"] !== undefined && String(d["7d-utilization"]) !== ""
         if (has5 || parseInt(d["5h-reset"]) > 0)
-            out.push({ kind: "primary", minutes: 300, label: "5h", pct: theme.aiPct(d["5h-utilization"]), resetTs: parseInt(d["5h-reset"]) || 0 })
+            out.push({ kind: "primary", minutes: 300, label: "5h", pct: theme.aiRemainingPct(d["5h-utilization"]), resetTs: parseInt(d["5h-reset"]) || 0 })
         if (has7 || parseInt(d["7d-reset"]) > 0)
-            out.push({ kind: "secondary", minutes: 10080, label: "Weekly", pct: theme.aiPct(d["7d-utilization"]), resetTs: parseInt(d["7d-reset"]) || 0 })
+            out.push({ kind: "secondary", minutes: 10080, label: "Weekly", pct: theme.aiRemainingPct(d["7d-utilization"]), resetTs: parseInt(d["7d-reset"]) || 0 })
         return out
     }
 
@@ -810,7 +825,7 @@ Item {
             }
             if (w.minutes === 300) { theme.aiCxPct5h = w.pct; theme.aiCxReset5hTs = w.resetTs }
             else if (w.minutes === 10080) { theme.aiCxPct7d = w.pct; theme.aiCxReset7dTs = w.resetTs }
-            if (w.pct > theme.aiCxQuotaPct) {
+            if (i === 0 || w.pct < theme.aiCxQuotaPct) {
                 theme.aiCxQuotaPct = w.pct
                 theme.aiCxQuotaLabel = String(general.label || "Codex") + " " + String(w.label || "window")
             }
@@ -826,12 +841,87 @@ Item {
         theme.aiCxTokens = ""
     }
 
+    function aiCompactTokens(n) {
+        n = parseInt(n) || 0
+        if (n >= 1000000) return (n / 1000000).toFixed(n >= 10000000 ? 1 : 2) + "M"
+        if (n >= 1000) return (n / 1000).toFixed(n >= 100000 ? 0 : 1) + "K"
+        return String(n)
+    }
+
+    // Local Codex totals remain useful when the remote quota endpoint is absent.
+    function aiApplyCodexStock(d, ageOk) {
+        if (!d || d.ready !== true) return
+        var today = parseInt(d.todayTotalTokens) || 0
+        var totalPrompts = parseInt(d.totalPrompts) || 0
+        var totalSessions = parseInt(d.totalSessions) || 0
+        theme.aiCxToday = today
+        theme.aiCxTokens = today > 0 ? theme.aiCompactTokens(today) : ""
+        theme.aiCxTodayPrompts = parseInt(d.todayPrompts) || 0
+        theme.aiCxTodaySessions = parseInt(d.todaySessions) || 0
+        theme.aiCxTotalPrompts = totalPrompts
+        theme.aiCxTotalSessions = totalSessions
+        theme.aiCxActiveDays = parseInt(d.activeDays) || 0
+
+        var lifetimeTokens = 0
+        var modelUsage = d.modelUsage || {}
+        for (var model in modelUsage) {
+            var usage = modelUsage[model] || {}
+            lifetimeTokens += (parseInt(usage.inputTokens) || 0)
+                + (parseInt(usage.outputTokens) || 0)
+                + (parseInt(usage.cacheReadInputTokens) || 0)
+                + (parseInt(usage.cacheCreationInputTokens) || 0)
+        }
+        theme.aiCxLifetimeTokens = lifetimeTokens
+        theme.aiCxUsageStatusText = String(d.usageStatusText || "")
+        if (!theme.aiCxPlan) theme.aiCxPlan = theme.aiPlanLabel(d.tierLabel || "")
+
+        var limits = d.limits || []
+        if (limits.length > 0) {
+            var windows = []
+            theme.aiCxPct5h = 0; theme.aiCxPct7d = 0
+            theme.aiCxReset5hTs = 0; theme.aiCxReset7dTs = 0
+            for (var i = 0; i < limits.length; i++) {
+                var limit = limits[i] || {}
+                var label = String(limit.label || "Limit")
+                var lower = label.toLowerCase()
+                var minutes = lower.indexOf("weekly") >= 0 || lower.indexOf("7-day") >= 0 ? 10080 : 0
+                var hourMatch = lower.match(/([0-9]+)h/)
+                if (minutes === 0 && hourMatch) minutes = parseInt(hourMatch[1]) * 60
+                var rawPercent = parseFloat(limit.percent)
+                var pct = isNaN(rawPercent) ? 0 : 100 - Math.max(0, Math.min(100, Math.round(rawPercent * 100)))
+                var resetMs = Date.parse(String(limit.resetsAt || ""))
+                var resetTs = isNaN(resetMs) ? 0 : Math.round(resetMs / 1000)
+                windows.push({ kind: i === 0 ? "primary" : "secondary", minutes: minutes, label: label, pct: pct, resetTs: resetTs })
+                if (minutes === 300) { theme.aiCxPct5h = pct; theme.aiCxReset5hTs = resetTs }
+                if (minutes === 10080) { theme.aiCxPct7d = pct; theme.aiCxReset7dTs = resetTs }
+            }
+            theme.aiCxWindows = windows
+            theme.aiCxPrimaryPct = windows[0].pct
+            theme.aiCxPrimaryLabel = windows[0].label
+            theme.aiCxPrimaryResetTs = windows[0].resetTs
+            theme.aiCxQuotaPct = windows[0].pct
+            theme.aiCxQuotaLabel = windows[0].label
+            for (var q = 1; q < windows.length; q++) {
+                if (windows[q].pct < theme.aiCxQuotaPct) {
+                    theme.aiCxQuotaPct = windows[q].pct
+                    theme.aiCxQuotaLabel = windows[q].label
+                }
+            }
+        }
+
+        var hasActivity = today > 0 || totalPrompts > 0 || totalSessions > 0
+        if (hasActivity || limits.length > 0) {
+            theme.aiCxHas = true
+            theme.aiCxFresh = theme.aiCxFresh || ageOk
+        }
+    }
+
     function aiCodexStatusLabel(status, reachedType) {
         if (status === "rejected")
             return reachedType ? "reached (" + reachedType + ")" : "reached"
         if (status === "allowed_warning") return "warning"
         if (status === "allowed") return "ok (not reached)"
-        return "unknown"
+        return "local totals only"
     }
 
     function aiFmtReset(ts) {
@@ -896,6 +986,24 @@ Item {
                     theme.aiClBlocked = false; theme.aiClTokens = ""; theme.aiClRate = ""
                     theme.aiClReset5hTs = 0; theme.aiClReset7dTs = 0; theme.aiClToday = 0
                 }
+                aiReadCodexStock.running = false
+                aiReadCodexStock.running = true
+            }
+        }
+    }
+
+    Process {
+        id: aiReadCodexStock
+        command: ["bash", "-c",
+            "date +%s; \"$HOME/.config/quickshell/bin/rise-codex-usage\""]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var raw = this.text, nl = raw.indexOf("\n")
+                var ageOk = nl > 0 && (Date.now() / 1000 - (parseInt(raw.substring(0, nl)) || 0)) < 1800
+                try {
+                    var d = JSON.parse((nl > 0 ? raw.substring(nl + 1) : "").trim())
+                    theme.aiApplyCodexStock(d, ageOk)
+                } catch (e) {}
             }
         }
     }
@@ -1599,12 +1707,12 @@ Item {
 
     // ── module enable flags (controlled by ControlPanel) ──
     property bool modStatus:     true
-    property bool modMemory:     true
-    property bool modCpu:        true
-    property bool modCpuTemperature: true
-    property bool modGpu:        true
-    property bool modStorage:    true
-    property bool modVolume:     true
+    property bool modMemory:     false
+    property bool modCpu:        false
+    property bool modCpuTemperature: false
+    property bool modGpu:        false
+    property bool modStorage:    false
+    property bool modVolume:     false
     property bool modWeather:    true
     property bool modNetwork:    true
     property string networkMode: "none"   // mirrored from NetworkWidget: wifi/ethernet/none
@@ -1984,10 +2092,10 @@ Item {
     property bool modBluetooth:  false   // default off (toggle in ControlPanel)
     property bool modBrightness: true
     property bool modMedia:      true
-    property bool modQuick:      true    // G10 group pill (idle-inhibitor · media · theme)
-    property bool modMpris:      true    // G9 now-playing / mpris pill
+    property bool modQuick:      false   // G10 group pill (idle-inhibitor · media · theme)
+    property bool modMpris:      false   // G9 now-playing / mpris pill
     property string mprisBarStyle: "default" // "default" or "full"
-    property bool modClaude:     false   // default off (toggle in ControlPanel)
+    property bool modClaude:     true    // Codex usage is useful at a glance
 
     // backlight presence — set by BrightnessWidget once it probes /sys/class/backlight.
     // ControlPanel uses this to hide the Brightness toggle on desktops without one.

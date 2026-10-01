@@ -31,6 +31,15 @@ https://github.com/basecamp/omarchy
 - Integrated revision: `88fa54be938cb8bf833f33fdaf8fe7b6d92ae72c`
 - License: MIT; the license is retained in the plugin directory.
 
+## Optional Argus integration
+
+- Project: https://github.com/diegopluna/omarchy-argus
+- Live integration checked at version `1.2.3`, revision:
+  `0625ce06af4f43b3c504617d0f6ee7268ec6e6a6`
+- License: MIT, copyright Diego Peter 2026.
+- Argus is not redistributed by this repository. The explicit install command
+  and its update/removal boundary are documented in [README.md](README.md).
+
 ## Determination font
 
 Determination Mono by Haley Wakamatsu (JapanYoshi) is not redistributed here.
